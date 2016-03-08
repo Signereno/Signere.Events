@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Rebus.Activation;
+using Rebus.AzureServiceBus.Config;
 using Rebus.Bus;
 using Rebus.Config;
+using Rebus.Retry.Simple;
 using Unipluss.Sign.Events.Entities;
 
 namespace Unipluss.Sign.Events.Client
@@ -89,7 +91,11 @@ namespace Unipluss.Sign.Events.Client
         internal void Start()
         {
             this.Bus = Configure.With(adapter)
-                .Transport(x => x.UseAzureServiceBus(_connectionstring, _queuename))
+                .Transport(x => x.UseAzureServiceBus(_connectionstring, _queuename,AzureServiceBusMode.Standard))
+                .Options(c =>
+                {
+                    c.SimpleRetryStrategy(_queuename+"_error",5,true);
+                })
                 //.Logging(x=>x.)
                 .Start();
         }
