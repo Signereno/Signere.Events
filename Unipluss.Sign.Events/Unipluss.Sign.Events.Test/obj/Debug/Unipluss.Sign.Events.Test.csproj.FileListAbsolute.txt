@@ -1,0 +1,15 @@
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Unipluss.Sign.Events.Test.dll
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Unipluss.Sign.Events.Test.pdb
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Unipluss.Sign.Events.Client.dll
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Unipluss.Sign.Events.Entities.dll
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Rebus.dll
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Rebus.AzureServiceBus.dll
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Microsoft.ServiceBus.dll
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Unipluss.Sign.Events.Client.pdb
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Unipluss.Sign.Events.Entities.pdb
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Rebus.xml
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Rebus.AzureServiceBus.xml
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Microsoft.ServiceBus.xml
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\obj\Debug\Unipluss.Sign.Events.Test.csprojResolveAssemblyReference.cache
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\obj\Debug\Unipluss.Sign.Events.Test.dll
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\obj\Debug\Unipluss.Sign.Events.Test.pdb

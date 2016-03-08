@@ -1,0 +1,4 @@
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Entities\bin\Debug\Unipluss.Sign.Events.Entities.dll
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Entities\bin\Debug\Unipluss.Sign.Events.Entities.pdb
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Entities\obj\Debug\Unipluss.Sign.Events.Entities.dll
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Entities\obj\Debug\Unipluss.Sign.Events.Entities.pdb
