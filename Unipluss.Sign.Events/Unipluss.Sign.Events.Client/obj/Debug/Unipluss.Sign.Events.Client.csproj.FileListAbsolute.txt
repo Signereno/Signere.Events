@@ -13,3 +13,9 @@ C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\bin\Debug
 C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\obj\Debug\Unipluss.Sign.Events.Client.csprojResolveAssemblyReference.cache
 C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\obj\Debug\Unipluss.Sign.Events.Client.dll
 C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\obj\Debug\Unipluss.Sign.Events.Client.pdb
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\bin\Debug\Unipluss.Sign.Events.Client.dll.config
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\bin\Debug\System.Net.Http.Extensions.dll
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\bin\Debug\System.Net.Http.Primitives.dll
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\bin\Debug\System.Net.Http.Extensions.xml
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\bin\Debug\System.Net.Http.Primitives.xml
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\obj\Debug\Unipluss.Sign.Events.Client.csproj.App.config

@@ -13,6 +13,23 @@ namespace Unipluss.Sign.Events.Client
             return eventClient;
         }
 
+        public static EventClient UseTestEnvironment(this EventClient eventClient, bool testEnvironment=true)
+        {
+            eventClient.TestEnvironment = testEnvironment;
+            return eventClient;
+        }
+        /// <summary>
+        /// Do not use only for Signere interla developers
+        /// </summary>
+        /// <param name="eventClient"></param>
+        /// <param name="testEnvironment"></param>
+        /// <returns></returns>
+        public static EventClient UseDevEnvironment(this EventClient eventClient, string apiUrl)
+        {
+            eventClient.APIURL = apiUrl;
+            return eventClient;
+        }
+
         public static EventClient SubScribeToDocumentCancledEvent(this EventClient eventClient,
            Func<DocumentCancledEvent, Task> DocumentSignedEventFunc)
         {
@@ -40,7 +57,10 @@ namespace Unipluss.Sign.Events.Client
             eventClient.SubScribeToDocumentSDOSavedEvent(DocumentSignedEventFunc);
             return eventClient;
         }
-
+        /// <summary>
+        /// Start the eventlistner, Important to call or else the eventclient will not start listening
+        /// </summary>
+        /// <param name="eventClient"></param>
         public static void Start(this EventClient eventClient)
         {
             eventClient.Start();
