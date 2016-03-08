@@ -11,6 +11,7 @@ namespace Unipluss.Sign.Events.Test
         {
             EventClient
                 .SetupWithPrimaryApiKey("",Guid.NewGuid(),"")
+                .UseTestEnvironment(true)
                 .SubScribeToDocumentSignedEvent(DocumentSignedEvent)
                 .SubScribeToDocumentCancledEvent(DocumentCancledEvent)
                 .SubScribeToDocumentPartialSignedEvent(DocumentPartialSignedEvent)
