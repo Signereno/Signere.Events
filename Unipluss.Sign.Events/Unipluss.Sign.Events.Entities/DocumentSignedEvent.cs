@@ -11,7 +11,7 @@ namespace Unipluss.Sign.Events.Entities
        
         public string ExternalDocumentId { get; set; }
 
-        public IEnumerable<Signee> Signees { get; set; }
+        public List< Signee> Signees { get; set; }
     }
 
     public class Signee
@@ -29,6 +29,9 @@ namespace Unipluss.Sign.Events.Entities
         public string IdentityProviderId { get; set; }
 
         public string IdentityProvider { get; set; }
+
+        public string SocialSecurityNumber { get; set; }
+
     }
 
     public class DocumentPartialSignedEvent
@@ -50,6 +53,8 @@ namespace Unipluss.Sign.Events.Entities
         public string IdentityProviderId { get; set; }
 
         public string IdentityProvider { get; set; }
+
+        public string SocialSecurityNumber { get; set; }
     }
 
     public class DocumentCancledEvent

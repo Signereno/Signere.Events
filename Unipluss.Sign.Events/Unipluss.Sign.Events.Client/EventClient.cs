@@ -6,14 +6,24 @@ using System.Threading.Tasks;
 using Rebus.Activation;
 using Rebus.AzureServiceBus.Config;
 using Rebus.Bus;
+using Rebus.Compression;
 using Rebus.Config;
+using Rebus.Encryption;
+using Rebus.Logging;
 using Rebus.Retry.Simple;
 using Unipluss.Sign.Events.Entities;
 
 namespace Unipluss.Sign.Events.Client
 {
-    public class EventClient
+    /// <summary>
+    /// Event client for Signere.no remember to Dispose of the client when done.
+    /// </summary>
+    public class EventClient:IDisposable
     {
+        private const string testApiUrl = "https://testapi.signere.no";
+        private const string productionApiUrl= "https://api.signere.no";
+
+
         private readonly string _apikey;
         private readonly string _connectionstring;
         private readonly Guid _documentProviderId;
@@ -38,6 +48,8 @@ namespace Unipluss.Sign.Events.Client
 
         internal bool TestEnvironment { get; set; }
         internal string APIURL { get; set; }
+
+        internal bool LogToConsole { get; set; }
 
         internal void SubScribeToDocumentPadesSavedEvent(Func<DocumentPadesSavedEvent, byte[], Task> func)
         {
@@ -78,8 +90,7 @@ namespace Unipluss.Sign.Events.Client
         /// <param name="DocumentProvider">Your account ID</param>
         /// <param name="ApiKey">Your primary API key</param>
         /// <returns></returns>
-        public static EventClient SetupWithPrimaryApiKey(string azureServiceBusConnectionString, Guid DocumentProvider,
-            string ApiKey)
+        public static EventClient SetupWithPrimaryApiKey(string azureServiceBusConnectionString, Guid DocumentProvider,string ApiKey)
         {
             var adapter = new BuiltinHandlerActivator();
 
@@ -103,15 +114,36 @@ namespace Unipluss.Sign.Events.Client
             return new EventClient(adapter, azureServiceBusConnectionString, DocumentProvider, ApiKey, true);
         }
 
-        internal void Start()
+        internal void Start(Rebus.Logging.LogLevel logLevel= Rebus.Logging.LogLevel.Error)
         {
+            string encryptionKey= DownloadEncryptionKey();
             Bus = Configure.With(adapter)
-                .Transport(x => x.UseAzureServiceBus(_connectionstring, _queuename, AzureServiceBusMode.Standard))
-                .Options(c => { c.SimpleRetryStrategy(_queuename + "_error", 5, true); })
-                //.Logging(x=>x.)
+                .Transport(x => x.UseAzureServiceBus(_connectionstring, _queuename, AzureServiceBusMode.Standard))                
+                .Options(c =>
+                {
+                    //c.SimpleRetryStrategy(_queuename + "_error", 5, true);
+                    c.EnableCompression();
+                    c.EnableEncryption(encryptionKey);
+                })
+                .Logging(x =>
+                {
+                    if(LogToConsole)
+                        x.ColoredConsole(logLevel);
+                    else if (RebusLoggerFactory!=null)
+                    {
+                        x.Use(RebusLoggerFactory);
+                    }
+                    else
+                    {
+                        x.None();
+                    }
+
+                    
+                })
                 .Start();
         }
 
+        internal IRebusLoggerFactory RebusLoggerFactory { get; set; }
 
         #region Download files
         private async Task<byte[]> DownloadSDO(Guid documentId)
@@ -119,6 +151,20 @@ namespace Unipluss.Sign.Events.Client
             var url = CreateUrl("api/DocumentFile/Signed/{0}", documentId, TestEnvironment);
 
             return await DownloadFile(url);
+        }
+
+        private string DownloadEncryptionKey()
+        {
+            var apiUrl = ApiUrl(TestEnvironment);
+            
+            var url =string.Format("{0}/{1}",apiUrl, "api/events/encryptionkey");
+
+            var resultBytes=Task.Run(async()=>await  DownloadFile(url)).Result;
+            var result = Encoding.UTF8.GetString(resultBytes);
+            
+            //Hack to unescape string
+            result= result.Substring(1,result.Length-2);
+            return result;
         }
 
         private async Task<byte[]> DownloadFile(string url)
@@ -180,12 +226,35 @@ namespace Unipluss.Sign.Events.Client
 
         private string CreateUrl(string path, Guid documentId, bool testEnvironment)
         {
-            var apiUrl = testEnvironment ? "https://testapi.signere.no" : "https://api.signere.no";
-            if (!string.IsNullOrWhiteSpace(APIURL))
-                apiUrl = APIURL;
+            var apiUrl = ApiUrl(testEnvironment);
             return string.Format("{0}/{1}", apiUrl, string.Format(path, documentId));
         }
+
+        private string ApiUrl(bool testEnvironment)
+        {
+            var apiUrl = testEnvironment ? testApiUrl : productionApiUrl;
+            if (!string.IsNullOrWhiteSpace(APIURL))
+                apiUrl = APIURL;
+            return apiUrl;
+        }
+
         #endregion
 
+        /// <summary>
+        /// IMPORTANT! Dispose the eventclient witch also disposes the Bus
+        /// </summary>
+        public void Dispose()
+        {
+            if(Bus!=null)
+                Bus.Dispose();
+        }
+    }
+
+    public enum LogLevel
+    {
+        Debug,
+        Info,
+        Warn,
+        Error,
     }
 }
