@@ -10,17 +10,17 @@ The client is built with a fluent API see example:
 
 ```csharp
      var client=EventClient
- +                
- +                .SetupWithPrimaryApiKey("",Guid.NewGuid(),"")
- +                .UseTestEnvironment(true)   
- +                .LogToConsole()                            
- +                .SubScribeToDocumentSignedEvent(DocumentSignedEvent)
- +                .SubScribeToDocumentCancledEvent(DocumentCancledEvent)
- +                .SubScribeToDocumentPartialSignedEvent(DocumentPartialSignedEvent)
- +                .SubScribeToDocumentPadesSavedEvent(DocumentPadesSavedEvent)
- +                .SubScribeToDocumentSDOSavedEvent(DocumentSDOSavedEvent)
- +                .Start();
+  
+          .SetupWithPrimaryApiKey("",Guid.NewGuid(),"")
+          .UseTestEnvironment(true)   
+          .LogToConsole()                            
+          .SubScribeToDocumentSignedEvent(DocumentSignedEvent)
+          .SubScribeToDocumentCancledEvent(DocumentCancledEvent)
+          .SubScribeToDocumentPartialSignedEvent(DocumentPartialSignedEvent)
+          .SubScribeToDocumentPadesSavedEvent(DocumentPadesSavedEvent)
+          .SubScribeToDocumentSDOSavedEvent(DocumentSDOSavedEvent)
+          .Start();
 
 
- +            client.Dispose();
+          client.Dispose();
 ```
