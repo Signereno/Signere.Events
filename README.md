@@ -9,12 +9,18 @@ All eventdata is encrypted with AES256 encryption.
 The client is built with a fluent API see example:
 
 ```csharp
-        EventClient
-                .SetupWithPrimaryApiKey("connectionstring",AccountIDGUID,"yourapikey")
-                .UseTestEnvironment(true)
-                .SubScribeToDocumentSignedEvent(DocumentSignedEvent)
-                .SubScribeToDocumentCancledEvent(DocumentCancledEvent)
-                .SubScribeToDocumentPartialSignedEvent(DocumentPartialSignedEvent)
-                .SubScribeToDocumentPadesSavedEvent(DocumentPadesSavedEvent)
-                .Start();
+     var client=EventClient
+ +                
+ +                .SetupWithPrimaryApiKey("",Guid.NewGuid(),"")
+ +                .UseTestEnvironment(true)   
+ +                .LogToConsole()                            
+ +                .SubScribeToDocumentSignedEvent(DocumentSignedEvent)
+ +                .SubScribeToDocumentCancledEvent(DocumentCancledEvent)
+ +                .SubScribeToDocumentPartialSignedEvent(DocumentPartialSignedEvent)
+ +                .SubScribeToDocumentPadesSavedEvent(DocumentPadesSavedEvent)
+ +                .SubScribeToDocumentSDOSavedEvent(DocumentSDOSavedEvent)
+ +                .Start();
+
+
+ +            client.Dispose();
 ```
