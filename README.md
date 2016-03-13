@@ -21,6 +21,6 @@ The client is built with a fluent API see example:
           .SubScribeToDocumentSDOSavedEvent(DocumentSDOSavedEvent)
           .Start();
 
-
-          client.Dispose();
+     //Always remember to dispose the client!
+     client.Dispose();
 ```
