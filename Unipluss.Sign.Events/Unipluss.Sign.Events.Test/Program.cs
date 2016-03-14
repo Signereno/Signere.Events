@@ -17,7 +17,7 @@ namespace Unipluss.Sign.Events.Test
                 .LogToConsole()                            
                 .SubscribeToDocumentSignedEvent(DocumentSignedEvent)
                 .SubscribeToDocumentCanceledEvent(DocumentCanceledEvent)
-                .SubscribeToDocumentPartialSignedEvent(DocumentPartialSignedEvent)
+                .SubscribeToDocumentPartiallySignedEvent(DocumentPartiallySignedEvent)
                 .SubscribeToDocumentPadesSavedEvent(DocumentPadesSavedEvent)
                 .SubscribeToDocumentSDOSavedEvent(DocumentSDOSavedEvent)
                 .Start();
@@ -37,7 +37,7 @@ namespace Unipluss.Sign.Events.Test
             
         }
 
-        private static async Task DocumentPartialSignedEvent(DocumentPartialSignedEvent arg)
+        private static async Task DocumentPartiallySignedEvent(DocumentPartiallySignedEvent arg)
         {
             System.IO.File.WriteAllText(string.Format("{0}_partial.json", arg.DocumentId), Newtonsoft.Json.JsonConvert.SerializeObject(arg, Formatting.Indented));
         }

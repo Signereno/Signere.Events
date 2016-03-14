@@ -32,7 +32,7 @@ namespace Unipluss.Sign.Events.Client
         private readonly BuiltinHandlerActivator adapter;
         public IBus Bus;
         private Func<DocumentCanceledEvent, Task> DocumentCanceledEventFunc;
-        private Func<DocumentPartialSignedEvent, Task> DocumentPartialSignedEventFunc;
+        private Func<DocumentPartiallySignedEvent, Task> DocumentPartialSignedEventFunc;
         private Func<DocumentSignedEvent, Task> DocumentSignedEventFunc;
 
         internal EventClient(BuiltinHandlerActivator adapter, string connectionstring, Guid documentProviderId,
@@ -79,7 +79,7 @@ namespace Unipluss.Sign.Events.Client
             adapter.Handle(func);
         }
 
-        internal void SubscribeToDocumentPartialSignedEvent(Func<DocumentPartialSignedEvent, Task> func)
+        internal void SubscribeToDocumentPartiallySignedEvent(Func<DocumentPartiallySignedEvent, Task> func)
         {
             adapter.Handle(func);
         }

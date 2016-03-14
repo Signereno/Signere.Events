@@ -74,10 +74,10 @@ namespace Unipluss.Sign.Events.Client
             return eventClient;
         }
 
-        public static EventClient SubscribeToDocumentPartialSignedEvent(this EventClient eventClient,
-           Func<DocumentPartialSignedEvent, Task> DocumentSignedEventFunc)
+        public static EventClient SubscribeToDocumentPartiallySignedEvent(this EventClient eventClient,
+           Func<DocumentPartiallySignedEvent, Task> DocumentSignedEventFunc)
         {
-            eventClient.SubscribeToDocumentPartialSignedEvent(DocumentSignedEventFunc);
+            eventClient.SubscribeToDocumentPartiallySignedEvent(DocumentSignedEventFunc);
             return eventClient;
         }
 

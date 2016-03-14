@@ -34,7 +34,7 @@ namespace Unipluss.Sign.Events.Entities
 
     }
 
-    public class DocumentPartialSignedEvent
+    public class DocumentPartiallySignedEvent
     {
         public Guid DocumentId { get; set; }
 
