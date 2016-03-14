@@ -14,7 +14,7 @@ The client is built with a fluent API - see an example below for how to set it u
           .LogToConsole()                            
           .SubscribeToDocumentSignedEvent(DocumentSignedEvent)
           .SubscribeToDocumentCanceledEvent(DocumentCanceledEvent)
-          .SubscribeToDocumentPartialSignedEvent(DocumentPartialSignedEvent)
+          .SubscribeToDocumentPartiallySignedEvent(DocumentPartiallySignedEvent)
           .SubscribeToDocumentPadesSavedEvent(DocumentPadesSavedEvent)
           .SubscribeToDocumentSDOSavedEvent(DocumentSDOSavedEvent)
           .Start();
@@ -22,4 +22,4 @@ The client is built with a fluent API - see an example below for how to set it u
      //Always remember to dispose the client!
      client.Dispose();
 ```
-Using the example above, the client will subscribe to the events "DocumentSigned", "DocumentCanceled", "DocumentPartialSigned", "DocumentPadesSaved" and "DocumentSDOSaved" (you can choose the ones that are relevant to you). Note that in the first line, .SetupWithPrimaryApiKey, you have to provide your service bus connection string, your account ID and your API key, respectively (which are left blank in the example above). You can find the account ID and API keys associated with your account at any time by logging in to signere.no. To obtain a service bus connection string, you can contact support@signere.no.
+Using the example above, the client will subscribe to the events "DocumentSigned", "DocumentCanceled", "DocumentPartiallySigned", "DocumentPadesSaved" and "DocumentSDOSaved" (you can choose the ones that are relevant to you). Note that in the first line, .SetupWithPrimaryApiKey, you have to provide your service bus connection string, your account ID and your API key, respectively (which are left blank in the example above). You can find the account ID and API keys associated with your account at any time by logging in to signere.no. To obtain a service bus connection string, you can contact support@signere.no.
