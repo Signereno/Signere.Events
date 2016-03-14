@@ -44,7 +44,7 @@ namespace Unipluss.Sign.Events.Test
 
         private static async  Task DocumentCanceledEvent(DocumentCanceledEvent arg)
         {
-            System.IO.File.WriteAllText(string.Format("{0}_cancled.json", arg.DocumentId), Newtonsoft.Json.JsonConvert.SerializeObject(arg, Formatting.Indented));
+            System.IO.File.WriteAllText(string.Format("{0}_canceled.json", arg.DocumentId), Newtonsoft.Json.JsonConvert.SerializeObject(arg, Formatting.Indented));
         }
 
         private static Task DocumentSignedEvent(DocumentSignedEvent arg)

@@ -31,7 +31,7 @@ namespace Unipluss.Sign.Events.Client
         private readonly bool _secondaryKey;
         private readonly BuiltinHandlerActivator adapter;
         public IBus Bus;
-        private Func<DocumentCanceledEvent, Task> DocumentCancledEventFunc;
+        private Func<DocumentCanceledEvent, Task> DocumentCanceledEventFunc;
         private Func<DocumentPartialSignedEvent, Task> DocumentPartialSignedEventFunc;
         private Func<DocumentSignedEvent, Task> DocumentSignedEventFunc;
 
@@ -50,6 +50,7 @@ namespace Unipluss.Sign.Events.Client
         internal string APIURL { get; set; }
 
         internal bool LogToConsole { get; set; }
+
 
         internal void SubscribeToDocumentPadesSavedEvent(Func<DocumentPadesSavedEvent, byte[], Task> func)
         {
@@ -73,7 +74,7 @@ namespace Unipluss.Sign.Events.Client
             adapter.Handle(func);
         }
 
-        internal void SubscribeToDocumentCancledEvent(Func<DocumentCanceledEvent, Task> func)
+        internal void SubscribeToDocumentCanceledEvent(Func<DocumentCanceledEvent, Task> func)
         {
             adapter.Handle(func);
         }
@@ -84,12 +85,12 @@ namespace Unipluss.Sign.Events.Client
         }
 
         /// <summary>
-        ///     Setup the EventClient to download events from the ServiceBus and files from the Signere API
+        ///     Sets up the EventClient to download events from the ServiceBus and files from the Signere API. Note that the primary key gives elevated privileges and is not necessary for subscribing to events - using secondary key is normally sufficient (see SetupWithSecondaryKey).
         /// </summary>
-        /// <param name="azureServiceBusConnectionString">ServiceBus connection string. Contact support@signere.no to get this</param>
+        /// <param name="azureServiceBusConnectionString">Your ServiceBus connection string. Contact support@signere.no to get this</param>
         /// <param name="DocumentProvider">Your account ID</param>
         /// <param name="ApiKey">Your primary API key</param>
-        /// <returns></returns>
+        /// <returns>EventClient set up using the primary API key</returns>
         public static EventClient SetupWithPrimaryApiKey(string azureServiceBusConnectionString, Guid DocumentProvider,string ApiKey)
         {
             var adapter = new BuiltinHandlerActivator();
@@ -99,12 +100,12 @@ namespace Unipluss.Sign.Events.Client
         }
 
         /// <summary>
-        ///     Setup the EventClient to download events from the ServiceBus and files from the Signere API
+        ///     Sets up the EventClient to download events from the ServiceBus and files from the Signere API.
         /// </summary>
-        /// <param name="azureServiceBusConnectionString">ServiceBus connection string. Contact support@signere.no to get this</param>
+        /// <param name="azureServiceBusConnectionString">Your ServiceBus connection string. Contact support@signere.no to get this</param>
         /// <param name="DocumentProvider">Your account ID</param>
         /// <param name="ApiKey">Your secondary API key</param>
-        /// <returns></returns>
+        /// <returns>EventClient set up using the secondary API key</returns>
         public static EventClient SetupWithSecondaryApiKey(string azureServiceBusConnectionString, Guid DocumentProvider,
             string ApiKey)
         {
@@ -241,7 +242,7 @@ namespace Unipluss.Sign.Events.Client
         #endregion
 
         /// <summary>
-        /// IMPORTANT! Dispose the EventClient, which also disposes the bus
+        /// IMPORTANT! Disposes the EventClient, which also disposes the bus. You should always call this method when your program has completed.
         /// </summary>
         public void Dispose()
         {
