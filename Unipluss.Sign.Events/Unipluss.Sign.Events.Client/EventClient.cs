@@ -16,7 +16,7 @@ using Unipluss.Sign.Events.Entities;
 namespace Unipluss.Sign.Events.Client
 {
     /// <summary>
-    /// Event client for Signere.no remember to Dispose of the client when done.
+    /// Event client for Signere.no. Remember to dispose of the client when done by calling the Dispose() method.
     /// </summary>
     public class EventClient:IDisposable
     {
@@ -31,7 +31,7 @@ namespace Unipluss.Sign.Events.Client
         private readonly bool _secondaryKey;
         private readonly BuiltinHandlerActivator adapter;
         public IBus Bus;
-        private Func<DocumentCancledEvent, Task> DocumentCancledEventFunc;
+        private Func<DocumentCanceledEvent, Task> DocumentCancledEventFunc;
         private Func<DocumentPartialSignedEvent, Task> DocumentPartialSignedEventFunc;
         private Func<DocumentSignedEvent, Task> DocumentSignedEventFunc;
 
@@ -51,7 +51,7 @@ namespace Unipluss.Sign.Events.Client
 
         internal bool LogToConsole { get; set; }
 
-        internal void SubScribeToDocumentPadesSavedEvent(Func<DocumentPadesSavedEvent, byte[], Task> func)
+        internal void SubscribeToDocumentPadesSavedEvent(Func<DocumentPadesSavedEvent, byte[], Task> func)
         {
             adapter.Handle<DocumentPadesSavedEvent>(async (bus, context, msg) =>
             {
@@ -60,7 +60,7 @@ namespace Unipluss.Sign.Events.Client
             });
         }
 
-        internal void SubScribeToDocumentSDOSavedEvent(Func<DocumentSDOSavedEvent, byte[], Task> func)
+        internal void SubscribeToDocumentSDOSavedEvent(Func<DocumentSDOSavedEvent, byte[], Task> func)
         {
             adapter.Handle<DocumentSDOSavedEvent>(async (bus, context, msg) =>
             {
@@ -68,17 +68,17 @@ namespace Unipluss.Sign.Events.Client
                 await func(msg, data);
             });
         }
-        internal void SubScribeToDocumentSignedEvent(Func<DocumentSignedEvent, Task> func)
+        internal void SubscribeToDocumentSignedEvent(Func<DocumentSignedEvent, Task> func)
         {
             adapter.Handle(func);
         }
 
-        internal void SubScribeToDocumentCancledEvent(Func<DocumentCancledEvent, Task> func)
+        internal void SubscribeToDocumentCancledEvent(Func<DocumentCanceledEvent, Task> func)
         {
             adapter.Handle(func);
         }
 
-        internal void SubScribeToDocumentPartialSignedEvent(Func<DocumentPartialSignedEvent, Task> func)
+        internal void SubscribeToDocumentPartialSignedEvent(Func<DocumentPartialSignedEvent, Task> func)
         {
             adapter.Handle(func);
         }
@@ -86,7 +86,7 @@ namespace Unipluss.Sign.Events.Client
         /// <summary>
         ///     Setup the EventClient to download events from the ServiceBus and files from the Signere API
         /// </summary>
-        /// <param name="azureServiceBusConnectionString">ServiceBus connectionstring contact signere support to get this</param>
+        /// <param name="azureServiceBusConnectionString">ServiceBus connection string. Contact support@signere.no to get this</param>
         /// <param name="DocumentProvider">Your account ID</param>
         /// <param name="ApiKey">Your primary API key</param>
         /// <returns></returns>
@@ -101,7 +101,7 @@ namespace Unipluss.Sign.Events.Client
         /// <summary>
         ///     Setup the EventClient to download events from the ServiceBus and files from the Signere API
         /// </summary>
-        /// <param name="azureServiceBusConnectionString">ServiceBus connectionstring contact signere support to get this</param>
+        /// <param name="azureServiceBusConnectionString">ServiceBus connection string. Contact support@signere.no to get this</param>
         /// <param name="DocumentProvider">Your account ID</param>
         /// <param name="ApiKey">Your secondary API key</param>
         /// <returns></returns>
@@ -241,7 +241,7 @@ namespace Unipluss.Sign.Events.Client
         #endregion
 
         /// <summary>
-        /// IMPORTANT! Dispose the eventclient witch also disposes the Bus
+        /// IMPORTANT! Dispose the EventClient, which also disposes the bus
         /// </summary>
         public void Dispose()
         {

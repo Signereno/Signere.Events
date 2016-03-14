@@ -15,11 +15,11 @@ namespace Unipluss.Sign.Events.Test
                 .SetupWithPrimaryApiKey("",Guid.NewGuid(),"")
                 .UseTestEnvironment(true)   
                 .LogToConsole()                            
-                .SubScribeToDocumentSignedEvent(DocumentSignedEvent)
-                .SubScribeToDocumentCancledEvent(DocumentCancledEvent)
-                .SubScribeToDocumentPartialSignedEvent(DocumentPartialSignedEvent)
-                .SubScribeToDocumentPadesSavedEvent(DocumentPadesSavedEvent)
-                .SubScribeToDocumentSDOSavedEvent(DocumentSDOSavedEvent)
+                .SubscribeToDocumentSignedEvent(DocumentSignedEvent)
+                .SubscribeToDocumentCanceledEvent(DocumentCanceledEvent)
+                .SubscribeToDocumentPartialSignedEvent(DocumentPartialSignedEvent)
+                .SubscribeToDocumentPadesSavedEvent(DocumentPadesSavedEvent)
+                .SubscribeToDocumentSDOSavedEvent(DocumentSDOSavedEvent)
                 .Start();
 
             Console.ReadLine();
@@ -42,7 +42,7 @@ namespace Unipluss.Sign.Events.Test
             System.IO.File.WriteAllText(string.Format("{0}_partial.json", arg.DocumentId), Newtonsoft.Json.JsonConvert.SerializeObject(arg, Formatting.Indented));
         }
 
-        private static async  Task DocumentCancledEvent(DocumentCancledEvent arg)
+        private static async  Task DocumentCanceledEvent(DocumentCanceledEvent arg)
         {
             System.IO.File.WriteAllText(string.Format("{0}_cancled.json", arg.DocumentId), Newtonsoft.Json.JsonConvert.SerializeObject(arg, Formatting.Indented));
         }

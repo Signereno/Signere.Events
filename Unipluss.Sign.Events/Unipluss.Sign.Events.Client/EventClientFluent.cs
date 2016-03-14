@@ -7,15 +7,15 @@ namespace Unipluss.Sign.Events.Client
 {
     public static class EventClientFluent
     {
-        public static EventClient SubScribeToDocumentSignedEvent(this EventClient eventClient,
+        public static EventClient SubscribeToDocumentSignedEvent(this EventClient eventClient,
             Func<DocumentSignedEvent, Task> DocumentSignedEventFunc)
         {
-            eventClient.SubScribeToDocumentSignedEvent(DocumentSignedEventFunc);
+            eventClient.SubscribeToDocumentSignedEvent(DocumentSignedEventFunc);
             return eventClient;
         }
 
         /// <summary>
-        /// Use this if you are connected to the Signere.no test environment and not the production environment. If in doubt contact support.
+        /// Use this if you are connected to the Signere.no test environment and not the production environment. If in doubt, contact support at support@signere.no
         /// </summary>
         /// <param name="eventClient"></param>
         /// <param name="testEnvironment"></param>
@@ -27,7 +27,7 @@ namespace Unipluss.Sign.Events.Client
         }
 
         /// <summary>
-        /// Plugin a logger compatible with Rebus read more here: https://github.com/rebus-org/Rebus/wiki/Logging
+        /// Plugin - a logger which is compatible with Rebus. Read more here: https://github.com/rebus-org/Rebus/wiki/Logging
         /// </summary>
         /// <param name="eventClient"></param>
         /// <param name="loggerFactory"></param>
@@ -42,21 +42,21 @@ namespace Unipluss.Sign.Events.Client
         }
 
         /// <summary>
-        /// Sets up a console logger in rebus, you can only have one logger, do not combine this with another logger
+        /// Sets up a console logger in Rebus. You can only have one logger, so do not combine this with another logger
         /// </summary>
         /// <param name="eventClient"></param>
-        /// <param name="logtoConsole"></param>
+        /// <param name="logToConsole"></param>
         /// <returns></returns>
-        public static EventClient LogToConsole(this EventClient eventClient, bool logtoConsole=true)
+        public static EventClient LogToConsole(this EventClient eventClient, bool logToConsole=true)
         {
-            eventClient.LogToConsole = logtoConsole;
-            if(logtoConsole)
+            eventClient.LogToConsole = logToConsole;
+            if(logToConsole)
                 eventClient.RebusLoggerFactory = null;
             return eventClient;
         }
 
         /// <summary>
-        /// Do not use only for Signere interla developers
+        /// Do not use - only for Signere internal developers
         /// </summary>
         /// <param name="eventClient"></param>
         /// <param name="testEnvironment"></param>
@@ -67,40 +67,40 @@ namespace Unipluss.Sign.Events.Client
             return eventClient;
         }
 
-        public static EventClient SubScribeToDocumentCancledEvent(this EventClient eventClient,
-           Func<DocumentCancledEvent, Task> DocumentSignedEventFunc)
+        public static EventClient SubscribeToDocumentCanceledEvent(this EventClient eventClient,
+           Func<DocumentCanceledEvent, Task> DocumentSignedEventFunc)
         {
-            eventClient.SubScribeToDocumentCancledEvent(DocumentSignedEventFunc);
+            eventClient.SubscribeToDocumentCanceledEvent(DocumentSignedEventFunc);
             return eventClient;
         }
 
-        public static EventClient SubScribeToDocumentPartialSignedEvent(this EventClient eventClient,
+        public static EventClient SubscribeToDocumentPartialSignedEvent(this EventClient eventClient,
            Func<DocumentPartialSignedEvent, Task> DocumentSignedEventFunc)
         {
-            eventClient.SubScribeToDocumentPartialSignedEvent(DocumentSignedEventFunc);
+            eventClient.SubscribeToDocumentPartialSignedEvent(DocumentSignedEventFunc);
             return eventClient;
         }
 
-        public static EventClient SubScribeToDocumentPadesSavedEvent(this EventClient eventClient,
+        public static EventClient SubscribeToDocumentPadesSavedEvent(this EventClient eventClient,
            Func<DocumentPadesSavedEvent,byte[], Task> DocumentPadesSavedEventFunc)
         {
-            eventClient.SubScribeToDocumentPadesSavedEvent(DocumentPadesSavedEventFunc);
+            eventClient.SubscribeToDocumentPadesSavedEvent(DocumentPadesSavedEventFunc);
             return eventClient;
         }
         /// <summary>
-        /// Subscribe to the DocumentSigned event this is fired when all the signers on a document have signed
+        /// Subscribe to the DocumentSigned event. This is fired when all the signers on a document have signed
         /// </summary>
         /// <param name="eventClient"></param>
         /// <param name="DocumentSignedEventFunc"></param>
         /// <returns></returns>
-        public static EventClient SubScribeToDocumentSDOSavedEvent(this EventClient eventClient,
+        public static EventClient SubscribeToDocumentSDOSavedEvent(this EventClient eventClient,
          Func<DocumentSDOSavedEvent, byte[], Task> DocumentSignedEventFunc)
         {
-            eventClient.SubScribeToDocumentSDOSavedEvent(DocumentSignedEventFunc);
+            eventClient.SubscribeToDocumentSDOSavedEvent(DocumentSignedEventFunc);
             return eventClient;
         }
         /// <summary>
-        /// Start the eventlistner, Important to call or else the eventclient will not start listening
+        /// Start the event listener. It is important to call this function; or else the EventClient will not start listening
         /// </summary>
         /// <param name="eventClient"></param>
         public static EventClient Start(this EventClient eventClient,Unipluss.Sign.Events.Client.LogLevel logLevel=LogLevel.Debug)

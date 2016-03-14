@@ -57,11 +57,11 @@ namespace Unipluss.Sign.Events.Entities
         public string SocialSecurityNumber { get; set; }
     }
 
-    public class DocumentCancledEvent
+    public class DocumentCanceledEvent
     {
         public Guid DocumentId { get; set; }
 
-        public string CancledMessage { get; set; }
+        public string CanceledMessage { get; set; }
 
         public string ExternalDocumentId { get; set; }
     }
