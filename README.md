@@ -1,26 +1,25 @@
 # Signere.Events
 ### Signere event client.
 
-Subscribe to Document events from Signere.no using Rebus and AzureServicebus.
-This is much easier than polling from a webservice. The events are instant and more resilient than polling.
+With this event client, it is possible to subscribe to document events from Signere.no by using Rebus and AzureServiceBus.
+This is much easier than polling from a web service. The events are instant and more resilient than polling. All event data are encrypted using AES256 encryption.
 
-All eventdata is encrypted with AES256 encryption.
-
-The client is built with a fluent API see example:
+The client is built with a fluent API - see an example below for how to set it up:
 
 ```csharp
      var client=EventClient
   
-          .SetupWithPrimaryApiKey("",Guid.NewGuid(),"")
+          .SetupWithPrimaryApiKey("","","")
           .UseTestEnvironment(true)   
           .LogToConsole()                            
-          .SubScribeToDocumentSignedEvent(DocumentSignedEvent)
-          .SubScribeToDocumentCancledEvent(DocumentCancledEvent)
-          .SubScribeToDocumentPartialSignedEvent(DocumentPartialSignedEvent)
-          .SubScribeToDocumentPadesSavedEvent(DocumentPadesSavedEvent)
-          .SubScribeToDocumentSDOSavedEvent(DocumentSDOSavedEvent)
+          .SubscribeToDocumentSignedEvent(DocumentSignedEvent)
+          .SubscribeToDocumentCanceledEvent(DocumentCanceledEvent)
+          .SubscribeToDocumentPartialSignedEvent(DocumentPartialSignedEvent)
+          .SubscribeToDocumentPadesSavedEvent(DocumentPadesSavedEvent)
+          .SubscribeToDocumentSDOSavedEvent(DocumentSDOSavedEvent)
           .Start();
 
      //Always remember to dispose the client!
      client.Dispose();
 ```
+Using the example above, the client will subscribe to the events "DocumentSigned", "DocumentCanceled", "DocumentPartialSigned", "DocumentPadesSaved" and "DocumentSDOSaved" (you can choose the ones that are relevant to you). Note that in the first line, .SetupWithPrimaryApiKey, you have to provide your service bus connection string, your account ID and your API key, respectively (which are left blank in the example above). You can find the account ID and API keys associated with your account at any time by logging in to signere.no. To obtain a service bus connection string, you can contact support@signere.no.
