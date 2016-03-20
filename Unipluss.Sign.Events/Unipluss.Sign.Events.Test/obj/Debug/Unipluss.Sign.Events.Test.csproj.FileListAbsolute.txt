@@ -1,4 +1,3 @@
-C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Unipluss.Sign.Events.Test.dll
 C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Unipluss.Sign.Events.Test.pdb
 C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Unipluss.Sign.Events.Client.dll
 C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Unipluss.Sign.Events.Entities.dll
@@ -11,7 +10,6 @@ C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\R
 C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Rebus.AzureServiceBus.xml
 C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Microsoft.ServiceBus.xml
 C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\obj\Debug\Unipluss.Sign.Events.Test.csprojResolveAssemblyReference.cache
-C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\obj\Debug\Unipluss.Sign.Events.Test.dll
 C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\obj\Debug\Unipluss.Sign.Events.Test.pdb
 G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Unipluss.Sign.Events.Test.exe
 G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Unipluss.Sign.Events.Test.pdb
@@ -30,3 +28,7 @@ G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\M
 G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\obj\Debug\Unipluss.Sign.Events.Test.csprojResolveAssemblyReference.cache
 G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\obj\Debug\Unipluss.Sign.Events.Test.exe
 G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\obj\Debug\Unipluss.Sign.Events.Test.pdb
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Unipluss.Sign.Events.Test.exe
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Newtonsoft.Json.dll
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Newtonsoft.Json.xml
+C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\obj\Debug\Unipluss.Sign.Events.Test.exe

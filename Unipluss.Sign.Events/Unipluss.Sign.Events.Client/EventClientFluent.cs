@@ -7,10 +7,17 @@ namespace Unipluss.Sign.Events.Client
 {
     public static class EventClientFluent
     {
+        /// <summary>
+        /// Subscribe to the Document Signed saved event. This is fired when all the signers have signed the document.
+        /// </summary>
+        /// <param name="eventClient"></param>
+        /// <param name="@event"></param>
+        /// <returns></returns>
         public static EventClient SubscribeToDocumentSignedEvent(this EventClient eventClient,
-            Func<DocumentSignedEvent, Task> DocumentSignedEventFunc)
+            Func<DocumentSignedEvent, Task> @event)
         {
-            eventClient.SubscribeToDocumentSignedEvent(DocumentSignedEventFunc);
+            if(@event!=null)
+                eventClient.SubscribeToDocumentSignedEvent(@event);
             return eventClient;
         }
 
@@ -67,36 +74,58 @@ namespace Unipluss.Sign.Events.Client
             return eventClient;
         }
 
+        /// <summary>
+        /// Subscribe to the SubscribeToDocumentCanceled event. This is fired when the document is cancled either by the sender or the receiver
+        /// </summary>
+        /// <param name="eventClient"></param>
+        /// <param name="@event"></param>
+        /// <returns></returns>
         public static EventClient SubscribeToDocumentCanceledEvent(this EventClient eventClient,
-           Func<DocumentCanceledEvent, Task> DocumentSignedEventFunc)
+           Func<DocumentCanceledEvent, Task> @event)
         {
-            eventClient.SubscribeToDocumentCanceledEvent(DocumentSignedEventFunc);
+            if(@event!=null)
+                eventClient.SubscribeToDocumentCanceledEvent(@event);
             return eventClient;
         }
 
+        /// <summary>
+        /// Subscribe to the DocumentSignedPartiallySigned event. This is fired when the document is signed, but when it's not the last signer.
+        /// </summary>
+        /// <param name="eventClient"></param>
+        /// <param name="@event"></param>
+        /// <returns></returns>
         public static EventClient SubscribeToDocumentPartiallySignedEvent(this EventClient eventClient,
-           Func<DocumentPartiallySignedEvent, Task> DocumentSignedEventFunc)
+           Func<DocumentPartiallySignedEvent, Task> @event)
         {
-            eventClient.SubscribeToDocumentPartiallySignedEvent(DocumentSignedEventFunc);
+            if(@event!=null)
+            eventClient.SubscribeToDocumentPartiallySignedEvent(@event);
             return eventClient;
         }
 
+        /// <summary>
+        /// Subscribe to the PADES saved event. This is fired when the PADES file (PDF document signing) is created and saved to storage
+        /// </summary>
+        /// <param name="eventClient"></param>
+        /// <param name="@event"></param>
+        /// <returns></returns>
         public static EventClient SubscribeToDocumentPadesSavedEvent(this EventClient eventClient,
-           Func<DocumentPadesSavedEvent,byte[], Task> DocumentPadesSavedEventFunc)
+           Func<DocumentPadesSavedEvent,byte[], Task> @event)
         {
-            eventClient.SubscribeToDocumentPadesSavedEvent(DocumentPadesSavedEventFunc);
+            if (@event != null)
+                eventClient.SubscribeToDocumentPadesSavedEvent(@event);
             return eventClient;
         }
         /// <summary>
-        /// Subscribe to the DocumentSigned event. This is fired when all the signers on a document have signed
+        /// Subscribe to the SDO saved event. This is fired when all the signers on a document have signed and the SDO file have been saved to storage
         /// </summary>
         /// <param name="eventClient"></param>
-        /// <param name="DocumentSignedEventFunc"></param>
+        /// <param name="event"></param>
         /// <returns></returns>
         public static EventClient SubscribeToDocumentSDOSavedEvent(this EventClient eventClient,
-         Func<DocumentSDOSavedEvent, byte[], Task> DocumentSignedEventFunc)
+         Func<DocumentSDOSavedEvent, byte[], Task> @event)
         {
-            eventClient.SubscribeToDocumentSDOSavedEvent(DocumentSignedEventFunc);
+            if (@event != null)
+                eventClient.SubscribeToDocumentSDOSavedEvent(@event);
             return eventClient;
         }
         /// <summary>
