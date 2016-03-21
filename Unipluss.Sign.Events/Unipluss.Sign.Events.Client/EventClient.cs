@@ -34,7 +34,7 @@ namespace Unipluss.Sign.Events.Client
         private Func<DocumentCanceledEvent, Task> DocumentCanceledEventFunc;
         private Func<DocumentPartiallySignedEvent, Task> DocumentPartialSignedEventFunc;
         private Func<DocumentSignedEvent, Task> DocumentSignedEventFunc;
-        private RebusConfigurer rebusConfigurer;
+        private Action<RebusLoggingConfigurer> rebusLoggingConfigurer;
 
         internal EventClient(BuiltinHandlerActivator adapter, string connectionstring, Guid documentProviderId,
             string apikey, bool secondaryKey)
@@ -45,8 +45,7 @@ namespace Unipluss.Sign.Events.Client
             _queuename = _documentProviderId.ToString("n");
             _apikey = apikey;
             _secondaryKey = secondaryKey;
-            rebusConfigurer = ConfigureRebus( );
-            NoRebusLogger = true;
+           NoRebusLogger = true;
         }
 
         internal bool TestEnvironment { get; set; }
@@ -108,7 +107,6 @@ namespace Unipluss.Sign.Events.Client
         {
             var adapter = new BuiltinHandlerActivator();
 
-
             return new EventClient(adapter, azureServiceBusConnectionString, DocumentProvider, ApiKey, false);
         }
 
@@ -123,8 +121,7 @@ namespace Unipluss.Sign.Events.Client
             string ApiKey)
         {
             var adapter = new BuiltinHandlerActivator();
-
-
+            
             return new EventClient(adapter, azureServiceBusConnectionString, DocumentProvider, ApiKey, true);
         }
 
@@ -132,25 +129,20 @@ namespace Unipluss.Sign.Events.Client
 
         internal void Start()
         {
-           
-            
-            Bus = rebusConfigurer
-                .Start();
+            Bus = ConfigureRebus().Start();
         }
 
         internal void AddRebusCompatibeLogger(Action<RebusLoggingConfigurer> config)
         {
+            rebusLoggingConfigurer = config;
             if (config != null)
             {
-                
-                rebusConfigurer.Logging(config);
                 this.NoRebusLogger = false;
             }
             else
             {
                 this.NoRebusLogger = true;
             }
-
         }
 
         public bool NoRebusLogger { get; set; }
@@ -173,14 +165,17 @@ namespace Unipluss.Sign.Events.Client
                     else if (RebusLoggerFactory!=null)
                     {
                         x.Use(RebusLoggerFactory);
+                    }else if (rebusLoggingConfigurer != null)
+                    {
+                        rebusLoggingConfigurer(x);
                     }
                     else if(NoRebusLogger)
                     {
                         x.None();
                     }
-
-                    
                 });
+
+            
         }
 
         internal IRebusLoggerFactory RebusLoggerFactory { get; set; }

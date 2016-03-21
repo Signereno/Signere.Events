@@ -1400,6 +1400,13 @@
             will be its own message ID.
             </summary>
         </member>
+        <member name="F:Rebus.Messages.Headers.CorrelationSequence">
+            <summary>
+            Any messages sent/forwarded/replied/published while handling a message will get a correlation sequence number of the handled message 
+            incremented by 1 copied to it. When a message is initially sent, its correlation sequence number is 0. The sequence number
+            can be used to deduce a strict ordering of correlated messages, even in the face of clock skew among servers
+            </summary>
+        </member>
         <member name="F:Rebus.Messages.Headers.ReturnAddress">
             <summary>
             The return address of the message, i.e. the address that repliers must reply to.
@@ -3323,6 +3330,11 @@
             Incoming step that loads and saves relevant saga data.
             </summary>
         </member>
+        <member name="F:Rebus.Sagas.LoadSagaDataStep.IgnoredProperties">
+            <summary>
+            properties ignored by auto-setter (the one that automatically sets the correlation ID on a new saga data instance)
+            </summary>
+        </member>
         <member name="M:Rebus.Sagas.LoadSagaDataStep.#ctor(Rebus.Sagas.ISagaStorage,Rebus.Logging.IRebusLoggerFactory)">
             <summary>
             Constructs the step with the given saga storage
@@ -3572,6 +3584,405 @@
         <member name="M:Rebus.Serialization.JsonSerializer.Deserialize(Rebus.Messages.TransportMessage)">
             <summary>
             Deserializes the given <see cref="T:Rebus.Messages.TransportMessage"/> back into a <see cref="T:Rebus.Messages.Message"/>
+            </summary>
+        </member>
+        <member name="T:Rebus.Testing.Events.FakeBusDisposed">
+            <summary>
+            Indicates that the bus was disposed
+            </summary>
+        </member>
+        <member name="T:Rebus.Testing.Events.FakeBusEvent">
+            <summary>
+            Base type of all events that a <see cref="T:Rebus.Testing.FakeBus"/> can record.
+            </summary>
+        </member>
+        <member name="P:Rebus.Testing.Events.FakeBusEvent.Time">
+            <summary>
+            Gets the time of when the event was recorded
+            </summary>
+        </member>
+        <member name="M:Rebus.Testing.Events.FakeBusEvent.ToString">
+            <summary>
+            Gets a nice string representation of this particular fake bus event
+            </summary>
+        </member>
+        <member name="T:Rebus.Testing.Events.MessageDeferred">
+            <summary>
+            Recorded when a message was deferred
+            </summary>
+        </member>
+        <member name="P:Rebus.Testing.Events.MessageDeferred.Delay">
+            <summary>
+            Gets the time span with which this message was delayed
+            </summary>
+        </member>
+        <member name="P:Rebus.Testing.Events.MessageDeferred.CommandMessage">
+            <summary>
+            Gets the message that was deferred
+            </summary>
+        </member>
+        <member name="P:Rebus.Testing.Events.MessageDeferred.OptionalHeaders">
+            <summary>
+            Gets the optional headers if they were supplied, or null if they weren't
+            </summary>
+        </member>
+        <member name="T:Rebus.Testing.Events.MessageDeferred`1">
+            <summary>
+            Recorded when a message was deferred
+            </summary>
+        </member>
+        <member name="P:Rebus.Testing.Events.MessageDeferred`1.CommandMessage">
+            <summary>
+            Gets the message that was deferred
+            </summary>
+        </member>
+        <member name="T:Rebus.Testing.Events.MessagePublished">
+            <summary>
+            Recorded when an event was published
+            </summary>
+        </member>
+        <member name="P:Rebus.Testing.Events.MessagePublished.EventMessage">
+            <summary>
+            Gets the event message that was published
+            </summary>
+        </member>
+        <member name="P:Rebus.Testing.Events.MessagePublished.OptionalHeaders">
+            <summary>
+            Gets the optional headers if they were supplied, or null if they weren't
+            </summary>
+        </member>
+        <member name="T:Rebus.Testing.Events.MessagePublished`1">
+            <summary>
+            Recorded when an event was published
+            </summary>
+        </member>
+        <member name="P:Rebus.Testing.Events.MessagePublished`1.EventMessage">
+            <summary>
+            Gets the event message that was published
+            </summary>
+        </member>
+        <member name="T:Rebus.Testing.Events.MessageSent">
+            <summary>
+            Base event recorded when a message was sent - actual event will be <see cref="T:Rebus.Testing.Events.MessageSent`1"/>
+            </summary>
+        </member>
+        <member name="P:Rebus.Testing.Events.MessageSent.OptionalHeaders">
+            <summary>
+            Gets the optional headers if they were supplied, or null if they weren't
+            </summary>
+        </member>
+        <member name="P:Rebus.Testing.Events.MessageSent.CommandMessage">
+            <summary>
+            Gets the message that was sent
+            </summary>
+        </member>
+        <member name="T:Rebus.Testing.Events.MessageSent`1">
+            <summary>
+            Recorded when a message was sent
+            </summary>
+        </member>
+        <member name="P:Rebus.Testing.Events.MessageSent`1.CommandMessage">
+            <summary>
+            Gets the message that was sent
+            </summary>
+        </member>
+        <member name="T:Rebus.Testing.Events.MessageSentToSelf">
+            <summary>
+            Recorded when a message was sent to the bus' own input queue
+            </summary>
+        </member>
+        <member name="P:Rebus.Testing.Events.MessageSentToSelf.CommandMessage">
+            <summary>
+            Gets the message that was sent
+            </summary>
+        </member>
+        <member name="P:Rebus.Testing.Events.MessageSentToSelf.OptionalHeaders">
+            <summary>
+            Gets the optional headers if they were supplied, or null if they weren't
+            </summary>
+        </member>
+        <member name="T:Rebus.Testing.Events.MessageSentToSelf`1">
+            <summary>
+            Recorded when a message was sent to the bus' own input queue
+            </summary>
+        </member>
+        <member name="P:Rebus.Testing.Events.MessageSentToSelf`1.CommandMessage">
+            <summary>
+            Gets the message that was sent
+            </summary>
+        </member>
+        <member name="T:Rebus.Testing.Events.ReplyMessageSent">
+            <summary>
+            Recorded when a reply message was sent
+            </summary>
+        </member>
+        <member name="P:Rebus.Testing.Events.ReplyMessageSent.ReplyMessage">
+            <summary>
+            Gets the message that was sent
+            </summary>
+        </member>
+        <member name="P:Rebus.Testing.Events.ReplyMessageSent.OptionalHeaders">
+            <summary>
+            Gets the optional headers if they were supplied, or null if they weren't
+            </summary>
+        </member>
+        <member name="T:Rebus.Testing.Events.ReplyMessageSent`1">
+            <summary>
+            Recorded when a reply message was sent
+            </summary>
+        </member>
+        <member name="P:Rebus.Testing.Events.ReplyMessageSent`1.ReplyMessage">
+            <summary>
+            Gets the message that was sent
+            </summary>
+        </member>
+        <member name="T:Rebus.Testing.Events.Subscribed">
+            <summary>
+            Recorded when a subscription was made
+            </summary>
+        </member>
+        <member name="P:Rebus.Testing.Events.Subscribed.EventType">
+            <summary>
+            Gets the type of event that was subscribed to
+            </summary>
+        </member>
+        <member name="T:Rebus.Testing.Events.Unsubscribed">
+            <summary>
+            Recorded when a subscription was revoked
+            </summary>
+        </member>
+        <member name="P:Rebus.Testing.Events.Unsubscribed.EventType">
+            <summary>
+            Gets the type of event that was unsubscribed to
+            </summary>
+        </member>
+        <member name="T:Rebus.Testing.FakeBus">
+            <summary>
+            The fake bus is an implementation of <see cref="T:Rebus.Bus.IBus"/> that can be used for testing. The fake bus
+            just collects information about what has happened to it, allowing you to query that information after the
+            fact by checking <see cref="P:Rebus.Testing.FakeBus.Events"/>
+            </summary>
+        </member>
+        <member name="P:Rebus.Testing.FakeBus.Events">
+             <summary>
+             Gets all events recorded at this point. Query this in order to check what happened to the fake bus while
+             it participated in a test - e.g. like this:
+             <code>
+             await fakeBus.Send(new MyMessage("woohoo!"));
+            
+             var sentMessagesWithMyGreeting = fakeBus.Events
+                 .OfType&lt;MessageSent&lt;MyMessage&gt;&gt;()
+                 .Count(m => m.CommandMessage.Text == "woohoo!");
+            
+             Assert.That(sentMessagesWithMyGreeting, Is.EqualTo(1));
+             </code>
+             </summary>
+        </member>
+        <member name="M:Rebus.Testing.FakeBus.On``1(System.Action{``0})">
+            <summary>
+            Adds a callback to be invoked when new events are recorded in the fake bus
+            </summary>
+        </member>
+        <member name="M:Rebus.Testing.FakeBus.SendLocal(System.Object,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Sends the specified message to our own input queue address
+            </summary>
+        </member>
+        <member name="M:Rebus.Testing.FakeBus.Send(System.Object,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Sends the specified message to a destination that is determined by calling <see cref="M:Rebus.Routing.IRouter.GetDestinationAddress(Rebus.Messages.Message)"/>
+            </summary>
+        </member>
+        <member name="M:Rebus.Testing.FakeBus.Reply(System.Object,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Sends the specified reply message to a destination that is determined by looking up the <see cref="F:Rebus.Messages.Headers.ReturnAddress"/> header of the message currently being handled.
+            This method can only be called from within a message handler.
+            </summary>
+        </member>
+        <member name="M:Rebus.Testing.FakeBus.Defer(System.TimeSpan,System.Object,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Defers the delivery of the message by attaching a <see cref="F:Rebus.Messages.Headers.DeferredUntil"/> header to it and delivering it to the configured timeout manager endpoint
+            (defaults to be ourselves). When the time is right, the deferred message is returned to the address indicated by the <see cref="F:Rebus.Messages.Headers.ReturnAddress"/> header.
+            </summary>
+        </member>
+        <member name="P:Rebus.Testing.FakeBus.Advanced">
+            <summary>
+            Gets the advanced API (which is not currently supported for the fake bus - throws an <see cref="T:System.InvalidOperationException"/> at the moment)
+            </summary>
+        </member>
+        <member name="M:Rebus.Testing.FakeBus.Subscribe``1">
+            <summary>
+            Subscribes to the topic defined by the assembly-qualified name of <typeparamref name="TEvent"/>. 
+            While this kind of subscription can work universally with the general topic-based routing, it works especially well with type-based routing,
+            which can be enabled by going 
+            <code>
+            Configure.With(...)
+                .(...)
+                .Routing(r => r.TypeBased()
+                        .Map&lt;SomeMessage&gt;("someEndpoint")
+                        .(...))
+            </code>
+            in the configuration
+            </summary>
+        </member>
+        <member name="M:Rebus.Testing.FakeBus.Subscribe(System.Type)">
+            <summary>
+            Subscribes to the topic defined by the assembly-qualified name of <paramref name="eventType"/>. 
+            While this kind of subscription can work universally with the general topic-based routing, it works especially well with type-based routing,
+            which can be enabled by going 
+            <code>
+            Configure.With(...)
+                .(...)
+                .Routing(r => r.TypeBased()
+                        .Map&lt;SomeMessage&gt;("someEndpoint")
+                        .(...))
+            </code>
+            in the configuration
+            </summary>
+        </member>
+        <member name="M:Rebus.Testing.FakeBus.Unsubscribe``1">
+            <summary>
+            Unsubscribes from the topic defined by the assembly-qualified name of <typeparamref name="TEvent"/>
+            </summary>
+        </member>
+        <member name="M:Rebus.Testing.FakeBus.Unsubscribe(System.Type)">
+            <summary>
+            Unsubscribes from the topic defined by the assembly-qualified name of <paramref name="eventType"/>
+            </summary>
+        </member>
+        <member name="M:Rebus.Testing.FakeBus.Publish(System.Object,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Publishes the event message on the topic defined by the assembly-qualified name of the type of the message.
+            While this kind of pub/sub can work universally with the general topic-based routing, it works especially well with type-based routing,
+            which can be enabled by going 
+            <code>
+            Configure.With(...)
+                .(...)
+                .Routing(r => r.TypeBased()
+                        .Map&lt;SomeMessage&gt;("someEndpoint")
+                        .(...))
+            </code>
+            in the configuration
+            </summary>
+        </member>
+        <member name="M:Rebus.Testing.FakeBus.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="T:Rebus.Testing.Internals.LockStepper">
+            <summary>
+            Pipeline step that makes it easy to block message processing until some particular point in time.
+            This is done by adding a <see cref="T:System.Threading.ManualResetEvent"/> to it, which will be set the next time
+            a message has been processed
+            </summary>
+        </member>
+        <member name="T:Rebus.Testing.LogEvent">
+            <summary>
+            Represents a log event emitted from Rebus' internals during saga testing with <see cref="T:Rebus.Testing.SagaFixture`1"/>
+            </summary>
+        </member>
+        <member name="P:Rebus.Testing.LogEvent.Time">
+            <summary>
+            Gets the (Rebus) time of when the event was emitted
+            </summary>
+        </member>
+        <member name="P:Rebus.Testing.LogEvent.Level">
+            <summary>
+            Gets the associated log level
+            </summary>
+        </member>
+        <member name="P:Rebus.Testing.LogEvent.Text">
+            <summary>
+            Gets a string representation of the log event
+            </summary>
+        </member>
+        <member name="P:Rebus.Testing.LogEvent.ExceptionOrNull">
+            <summary>
+            Gets the associated exception (or null if none was included)
+            </summary>
+        </member>
+        <member name="P:Rebus.Testing.LogEvent.SourceType">
+            <summary>
+            Gets the type that the logger was associated with
+            </summary>
+        </member>
+        <member name="M:Rebus.Testing.LogEvent.ToString">
+            <summary>
+            Gets a string-formatted version of the log event
+            </summary>
+        </member>
+        <member name="T:Rebus.Testing.SagaFixture">
+            <summary>
+            Saga fixture factory class - can be used to create an appropriate <see cref="T:Rebus.Testing.SagaFixture`1"/> for a saga
+            handler to participate in white-box testing scenarios
+            </summary>
+        </member>
+        <member name="M:Rebus.Testing.SagaFixture.For``1">
+            <summary>
+            Creates a saga fixture for the specified saga handler, which must have a default constructor. If the saga handler
+            requires any parameters to be created, use the <see cref="M:Rebus.Testing.SagaFixture.For``1(System.Func{``0})"/> overload that
+            accepts a factory function as a saga handler instance creator
+            </summary>
+        </member>
+        <member name="M:Rebus.Testing.SagaFixture.For``1(System.Func{``0})">
+            <summary>
+            Creates a saga fixture for the specified saga handler, which will be instantiated by the given factory method
+            </summary>
+        </member>
+        <member name="T:Rebus.Testing.SagaFixture`1">
+            <summary>
+            Saga fixture that wraps an in-mem Rebus that 
+            </summary>
+        </member>
+        <member name="E:Rebus.Testing.SagaFixture`1.Correlated">
+            <summary>
+            Event that is raised whenever a message could be successfully correlated with a saga data instance. The instance
+            is passed to the event handler
+            </summary>
+        </member>
+        <member name="E:Rebus.Testing.SagaFixture`1.CouldNotCorrelate">
+            <summary>
+            Event that is raised whenever a message could NOT be successfully correlated with a saga data instance. The event is
+            raised regardless of whether the incoming message is allowed to initiate a new saga or not.
+            </summary>
+        </member>
+        <member name="E:Rebus.Testing.SagaFixture`1.Created">
+            <summary>
+            Event that is raised when the incoming message resulted in creating a new saga data instance. The created instance
+            is passed to the event handler.
+            </summary>
+        </member>
+        <member name="E:Rebus.Testing.SagaFixture`1.Updated">
+            <summary>
+            Event that is raised when the incoming message resulted in updating an existing saga data instance. The updated instance
+            is passed to the event handler.
+            </summary>
+        </member>
+        <member name="E:Rebus.Testing.SagaFixture`1.Deleted">
+            <summary>
+            Event that is raised when the incoming message resulted in deleting an existing saga data instance. The deleted instance
+            is passed to the event handler.
+            </summary>
+        </member>
+        <member name="P:Rebus.Testing.SagaFixture`1.Data">
+            <summary>
+            Gets all of the currently existing saga data instances
+            </summary>
+        </member>
+        <member name="P:Rebus.Testing.SagaFixture`1.LogEvents">
+            <summary>
+            Gets all log events emitted by the internal Rebus instance
+            </summary>
+        </member>
+        <member name="M:Rebus.Testing.SagaFixture`1.Deliver(System.Object,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Delivers the given message to the saga handler
+            </summary>
+        </member>
+        <member name="M:Rebus.Testing.SagaFixture`1.Dispose">
+            <summary>
+            Shuts down the in-mem bus that holds the saga handler
             </summary>
         </member>
         <member name="T:Rebus.Threading.AsyncBottleneck">
