@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Rebus.Config;
 using Rebus.Logging;
 using Unipluss.Sign.Events.Entities;
 
@@ -54,9 +55,12 @@ namespace Unipluss.Sign.Events.Client
         /// <param name="eventClient"></param>
         /// <param name="logToConsole"></param>
         /// <returns></returns>
-        public static EventClient LogToConsole(this EventClient eventClient, bool logToConsole=true)
+        public static EventClient LogToConsole(this EventClient eventClient, Unipluss.Sign.Events.Client.LogLevel logLevel = LogLevel.Debug, bool logToConsole=true)
         {
+            var internalLogLevel = (Rebus.Logging.LogLevel)Enum.Parse(typeof(Rebus.Logging.LogLevel), logLevel.ToString());
+
             eventClient.LogToConsole = logToConsole;
+            eventClient.logLevel = internalLogLevel;
             if(logToConsole)
                 eventClient.RebusLoggerFactory = null;
             return eventClient;
@@ -128,14 +132,57 @@ namespace Unipluss.Sign.Events.Client
                 eventClient.SubscribeToDocumentSDOSavedEvent(@event);
             return eventClient;
         }
+
+
+        /// <summary>
+        /// Subscribe to the DocumentFormPartiallySignedEvent event. This is fired when a form is signed but there are more signers that haven't signed yet.
+        /// </summary>
+        /// <param name="eventClient"></param>
+        /// <param name="@event"></param>
+        /// <returns></returns>
+        public static EventClient SubscribeToDocumentFormPartiallySignedEvent(this EventClient eventClient,
+           Func<DocumentFormPartiallySignedEvent, Task> @event)
+        {
+            if (@event != null)
+                eventClient.SubscribeToDocumentFormPartiallySignedEvent(@event);
+            return eventClient;
+        }
+
+        /// <summary>
+        /// Subscribe to the DocumentFormSignedEvent event. This is fired when a form is signed if there is more than one signer this is fired when the last signer have signed.
+        /// </summary>
+        /// <param name="eventClient"></param>
+        /// <param name="@event"></param>
+        /// <returns></returns>
+        public static EventClient SubscribeToDocumentFormSignedEvent(this EventClient eventClient,
+           Func<DocumentFormSignedEvent, Task> @event)
+        {
+            if (@event != null)
+                eventClient.SubscribeToDocumentFormSignedEvent(@event);
+            return eventClient;
+        }
+
+
         /// <summary>
         /// Start the event listener. It is important to call this function; or else the EventClient will not start listening
         /// </summary>
         /// <param name="eventClient"></param>
-        public static EventClient Start(this EventClient eventClient,Unipluss.Sign.Events.Client.LogLevel logLevel=LogLevel.Debug)
+        public static EventClient Start(this EventClient eventClient)
         {
-            var internalLogLevel = (Rebus.Logging.LogLevel) Enum.Parse(typeof (Rebus.Logging.LogLevel), logLevel.ToString());
-            eventClient.Start(internalLogLevel);
+            eventClient.Start();
+            return eventClient;
+        }
+
+        /// <summary>
+        /// Enables to Use Rebus compatible logger using the RebusLogging configuration syntax for example x.Serilog(new LoggerConfiguration().WriteTo.ColoredConsole().MinimumLevel.Debug()) 
+        /// For more examples go to https://github.com/rebus-org/Rebus/wiki/Logging
+        /// </summary>
+        /// <param name="eventClient"></param>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        public static EventClient AddRebusCompatibeLogger(this EventClient eventClient, Action<RebusLoggingConfigurer> config)
+        {
+            eventClient.AddRebusCompatibeLogger(config);
             return eventClient;
         }
     }

@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Unipluss.Sign.Events.Client;
 using Unipluss.Sign.Events.Entities;
+using Rebus.Serilog;
+using Serilog;
 
 namespace Unipluss.Sign.Events.Test
 {
@@ -10,11 +12,13 @@ namespace Unipluss.Sign.Events.Test
     {
         static void Main(string[] args)
         {
+          
             var client=EventClient
                 
                 .SetupWithPrimaryApiKey("",Guid.NewGuid(),"")
                 .UseTestEnvironment(true)   
-                .LogToConsole()                            
+                .LogToConsole()  
+                .AddRebusCompatibeLogger(x=>x.Serilog(new LoggerConfiguration().WriteTo.ColoredConsole().MinimumLevel.Debug()))
                 .SubscribeToDocumentSignedEvent(DocumentSignedEvent)
                 .SubscribeToDocumentCanceledEvent(DocumentCanceledEvent)
                 .SubscribeToDocumentPartiallySignedEvent(DocumentPartiallySignedEvent)

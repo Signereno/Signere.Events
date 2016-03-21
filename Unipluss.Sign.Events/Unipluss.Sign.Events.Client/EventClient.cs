@@ -34,6 +34,7 @@ namespace Unipluss.Sign.Events.Client
         private Func<DocumentCanceledEvent, Task> DocumentCanceledEventFunc;
         private Func<DocumentPartiallySignedEvent, Task> DocumentPartialSignedEventFunc;
         private Func<DocumentSignedEvent, Task> DocumentSignedEventFunc;
+        private RebusConfigurer rebusConfigurer;
 
         internal EventClient(BuiltinHandlerActivator adapter, string connectionstring, Guid documentProviderId,
             string apikey, bool secondaryKey)
@@ -44,13 +45,15 @@ namespace Unipluss.Sign.Events.Client
             _queuename = _documentProviderId.ToString("n");
             _apikey = apikey;
             _secondaryKey = secondaryKey;
+            rebusConfigurer = ConfigureRebus( );
+            NoRebusLogger = true;
         }
 
         internal bool TestEnvironment { get; set; }
         internal string APIURL { get; set; }
 
         internal bool LogToConsole { get; set; }
-
+        internal Rebus.Logging.LogLevel? logLevel { get; set; }
 
         internal void SubscribeToDocumentPadesSavedEvent(Func<DocumentPadesSavedEvent, byte[], Task> func)
         {
@@ -80,6 +83,16 @@ namespace Unipluss.Sign.Events.Client
         }
 
         internal void SubscribeToDocumentPartiallySignedEvent(Func<DocumentPartiallySignedEvent, Task> func)
+        {
+            adapter.Handle(func);
+        }
+
+        internal void SubscribeToDocumentFormSignedEvent(Func<DocumentFormSignedEvent, Task> func)
+        {
+            adapter.Handle(func);
+        }
+
+        internal void SubscribeToDocumentFormPartiallySignedEvent(Func<DocumentFormPartiallySignedEvent, Task> func)
         {
             adapter.Handle(func);
         }
@@ -115,10 +128,37 @@ namespace Unipluss.Sign.Events.Client
             return new EventClient(adapter, azureServiceBusConnectionString, DocumentProvider, ApiKey, true);
         }
 
-        internal void Start(Rebus.Logging.LogLevel logLevel= Rebus.Logging.LogLevel.Error)
+        
+
+        internal void Start()
         {
-            string encryptionKey= DownloadEncryptionKey();
-            Bus = Configure.With(adapter)
+           
+            
+            Bus = rebusConfigurer
+                .Start();
+        }
+
+        internal void AddRebusCompatibeLogger(Action<RebusLoggingConfigurer> config)
+        {
+            if (config != null)
+            {
+                
+                rebusConfigurer.Logging(config);
+                this.NoRebusLogger = false;
+            }
+            else
+            {
+                this.NoRebusLogger = true;
+            }
+
+        }
+
+        public bool NoRebusLogger { get; set; }
+
+        private RebusConfigurer ConfigureRebus()
+        {
+            string encryptionKey = DownloadEncryptionKey();
+            return Configure.With(adapter)
                 .Transport(x => x.UseAzureServiceBus(_connectionstring, _queuename, AzureServiceBusMode.Standard))                
                 .Options(c =>
                 {
@@ -129,28 +169,29 @@ namespace Unipluss.Sign.Events.Client
                 .Logging(x =>
                 {
                     if(LogToConsole)
-                        x.ColoredConsole(logLevel);
+                        x.ColoredConsole(this.logLevel==null ? Rebus.Logging.LogLevel.Error : this.logLevel.Value);
                     else if (RebusLoggerFactory!=null)
                     {
                         x.Use(RebusLoggerFactory);
                     }
-                    else
+                    else if(NoRebusLogger)
                     {
                         x.None();
                     }
 
                     
-                })
-                .Start();
+                });
         }
 
         internal IRebusLoggerFactory RebusLoggerFactory { get; set; }
+
+        internal RebusLoggingConfigurer Configurer { get; set; }
 
         #region Download files
         private async Task<byte[]> DownloadSDO(Guid documentId)
         {
             var url = CreateUrl("api/DocumentFile/Signed/{0}", documentId, TestEnvironment);
-
+            
             return await DownloadFile(url);
         }
 

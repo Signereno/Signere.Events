@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+    <metadata>
+        <id>Signere.Events</id>
+        <version>1.0.2</version>
+        <title>Signere.no events</title>
+        <authors>Signere.no</authors>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Signere.no Event client.
+Listen to all the document events from Signere.no.</description>
+        <releaseNotes>Added form events</releaseNotes>
+        <dependencies>
+            <group targetFramework=".NETFramework4.5">
+                <dependency id="Rebus.AzureServiceBus" version="0.99.41" />
+                <dependency id="Microsoft.Net.Http" version="2.2.29" />
+            </group>
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="..\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\bin\Release\Unipluss.Sign.Events.Client.dll" target="lib\net45\Unipluss.Sign.Events.Client.dll" />
+        <file src="..\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\bin\Release\Unipluss.Sign.Events.Entities.dll" target="lib\net45\Unipluss.Sign.Events.Entities.dll" />
+    </files>
+</package>
