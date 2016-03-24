@@ -2,7 +2,9 @@
 ### Signere event client.
 
 With this event client, it is possible to subscribe to document events from Signere.no by using Rebus and AzureServiceBus.
-This is much easier than polling from a web service. The events are instant and more resilient than polling. All event data are encrypted using AES256 encryption.
+This is much easier than polling from a web service. The events are instant and more resilient than polling. 
+
+All event data are encrypted using AES256 encryption.
 
 The client is built with a fluent API - see an example below for how to set it up:
 
