@@ -151,7 +151,8 @@ namespace Unipluss.Sign.Events.Client
         {
             string encryptionKey = DownloadEncryptionKey();
             return Configure.With(adapter)
-                .Transport(x => x.UseAzureServiceBus(_connectionstring, _queuename, AzureServiceBusMode.Standard))                
+                .Transport(x => x.UseAzureServiceBus(_connectionstring, _queuename, AzureServiceBusMode.Basic)
+                .DoNotCreateQueues())           
                 .Options(c =>
                 {
                     //c.SimpleRetryStrategy(_queuename + "_error", 5, true);

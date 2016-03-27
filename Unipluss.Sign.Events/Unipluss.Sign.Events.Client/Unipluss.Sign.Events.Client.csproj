@@ -41,11 +41,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Rebus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rebus.0.99.38\lib\NET45\Rebus.dll</HintPath>
+      <HintPath>..\packages\Rebus.0.99.44\lib\NET45\Rebus.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Rebus.AzureServiceBus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rebus.AzureServiceBus.0.99.38\lib\NET45\Rebus.AzureServiceBus.dll</HintPath>
+      <HintPath>..\packages\Rebus.AzureServiceBus.0.99.44\lib\NET45\Rebus.AzureServiceBus.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />

@@ -14,8 +14,9 @@ namespace Unipluss.Sign.Events.Test
         {
           
             var client=EventClient
-                
+
                 .SetupWithPrimaryApiKey("",Guid.NewGuid(),"")
+                
                 .UseTestEnvironment(true)   
                 .LogToConsole()  
                 .AddRebusCompatibeLogger(x=>x.Serilog(new LoggerConfiguration().WriteTo.ColoredConsole().MinimumLevel.Debug()))
