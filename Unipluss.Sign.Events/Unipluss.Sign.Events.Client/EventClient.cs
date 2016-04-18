@@ -229,6 +229,9 @@ namespace Unipluss.Sign.Events.Client
                 }
                 catch (Exception e)
                 {
+                    if(LogToConsole)
+                        Console.WriteLine(e);
+
                     throw e;
                 }
             }
