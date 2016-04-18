@@ -191,6 +191,13 @@ namespace Unipluss.Sign.Events.Client
             return await DownloadFile(url);
         }
 
+        private async Task<byte[]> DownloadPades(Guid documentId)
+        {
+            var url = CreateUrl("api/DocumentFile/SignedPDF/{0}", documentId, TestEnvironment);
+            return await DownloadFile(url);
+        }
+
+
         private string DownloadEncryptionKey()
         {
             var apiUrl = ApiUrl(TestEnvironment);
@@ -256,12 +263,7 @@ namespace Unipluss.Sign.Events.Client
             return (sbinary);
         }
 
-        private async Task<byte[]> DownloadPades(Guid documentId)
-        {
-            var url = CreateUrl("api/DocumentFile/SignedPDF/{0}", documentId, TestEnvironment);
-            return await DownloadFile(url);
-        }
-
+       
         private string CreateUrl(string path, Guid documentId, bool testEnvironment)
         {
             var apiUrl = ApiUrl(testEnvironment);
@@ -283,6 +285,7 @@ namespace Unipluss.Sign.Events.Client
         /// </summary>
         public void Dispose()
         {
+            
             if(Bus!=null)
                 Bus.Dispose();
         }
