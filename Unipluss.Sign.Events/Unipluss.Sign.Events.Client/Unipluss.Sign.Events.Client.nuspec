@@ -8,4 +8,8 @@
     <description>Signere.no Event client.
 Listen to all the document events from Signere.no.</description>
   </metadata>
+  <files>
+	<file src="bin\Release\Unipluss.Sign.Events.Entities.dll" target="lib\net45"></file>
+	<file src="bin\Release\Unipluss.Sign.Events.Client.dll" target="lib\net45"></file>
+  </files>
 </package>
