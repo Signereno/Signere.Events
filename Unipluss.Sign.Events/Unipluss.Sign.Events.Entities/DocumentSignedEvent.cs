@@ -111,6 +111,8 @@ namespace Unipluss.Sign.Events.Entities
         public string SocialSecurityNumber { get; set; }
 
         public Dictionary<string,string> FormFields { get; set; }
+
+        public string ExternalDocumentId { get; set; }
     }
 
     public class DocumentFormSignedEvent
@@ -126,6 +128,8 @@ namespace Unipluss.Sign.Events.Entities
         public List<Signee> Signees { get; set; }
 
         public Dictionary<string, string> FormFields { get; set; }
+
+        public string ExternalDocumentId { get; set; }
 
     }
 
