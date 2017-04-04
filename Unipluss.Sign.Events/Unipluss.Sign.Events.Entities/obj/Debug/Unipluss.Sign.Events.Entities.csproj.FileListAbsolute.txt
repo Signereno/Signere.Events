@@ -6,3 +6,8 @@ G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Entities\bin\Deb
 G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Entities\bin\Debug\Unipluss.Sign.Events.Entities.pdb
 G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Entities\obj\Debug\Unipluss.Sign.Events.Entities.dll
 G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Entities\obj\Debug\Unipluss.Sign.Events.Entities.pdb
+D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Entities\bin\Debug\Unipluss.Sign.Events.Entities.dll
+D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Entities\bin\Debug\Unipluss.Sign.Events.Entities.pdb
+D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Entities\obj\Debug\Unipluss.Sign.Events.Entities.csprojResolveAssemblyReference.cache
+D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Entities\obj\Debug\Unipluss.Sign.Events.Entities.dll
+D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Entities\obj\Debug\Unipluss.Sign.Events.Entities.pdb
