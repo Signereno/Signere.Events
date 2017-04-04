@@ -240,6 +240,11 @@
             This function is called each time no message was received.
             </summary>
         </member>
+        <member name="M:Rebus.Backoff.SimpleCustomizedBackoffStrategy.WaitError">
+            <summary>
+            Asynchronously waits a while when an error has occurred
+            </summary>
+        </member>
         <member name="M:Rebus.Backoff.SimpleCustomizedBackoffStrategy.Reset">
             <summary>
             Resets the strategy. Is called whenever a message was received.
@@ -255,6 +260,11 @@
             Asynchronously executes the next wait operation, possibly advancing the wait cursor to a different wait time for the next time
             </summary>
         </member>
+        <member name="M:Rebus.Backoff.SimpleConstantPollingBackoffStrategy.WaitError">
+            <summary>
+            Asynchronously waits a while when an error has occurred
+            </summary>
+        </member>
         <member name="M:Rebus.Backoff.SimpleConstantPollingBackoffStrategy.Reset">
             <summary>
             Resets the wait cursor, ensuring that the next wait operation will start over
@@ -268,7 +278,7 @@
             This is the main bus thing which you'll most likely hold on to
             </summary>
         </member>
-        <member name="M:Rebus.Bus.RebusBus.#ctor(Rebus.Workers.IWorkerFactory,Rebus.Routing.IRouter,Rebus.Transport.ITransport,Rebus.Pipeline.IPipeline,Rebus.Pipeline.IPipelineInvoker,Rebus.Subscriptions.ISubscriptionStorage,Rebus.Config.Options,Rebus.Logging.IRebusLoggerFactory)">
+        <member name="M:Rebus.Bus.RebusBus.#ctor(Rebus.Workers.IWorkerFactory,Rebus.Routing.IRouter,Rebus.Transport.ITransport,Rebus.Pipeline.IPipeline,Rebus.Pipeline.IPipelineInvoker,Rebus.Subscriptions.ISubscriptionStorage,Rebus.Config.Options,Rebus.Logging.IRebusLoggerFactory,Rebus.Bus.BusLifetimeEvents,Rebus.DataBus.IDataBus)">
             <summary>
             Constructs the bus.
             </summary>
@@ -424,6 +434,11 @@
             Gets an API to perform operations with the transport message currently being handled
             </summary>
         </member>
+        <member name="P:Rebus.Bus.Advanced.IAdvancedApi.DataBus">
+            <summary>
+            Gets the API for the data bus
+            </summary>
+        </member>
         <member name="T:Rebus.Bus.Advanced.IRoutingApi">
             <summary>
             Provides a raw API for explicitly routing messages to other endpoints
@@ -487,6 +502,27 @@
         <member name="M:Rebus.Bus.Advanced.IWorkersApi.SetNumberOfWorkers(System.Int32)">
             <summary>
             Sets the number of workers, blocking until the desired number has been reached
+            </summary>
+        </member>
+        <member name="T:Rebus.Bus.BusLifetimeEvents">
+            <summary>
+            Has events that can be subscribed to if one wants to be notified when certain things happen
+            </summary>
+        </member>
+        <member name="E:Rebus.Bus.BusLifetimeEvents.BusDisposing">
+            <summary>
+            Event that is raised when the bus is disposed BEFORE the bus raises its own <see cref="E:Rebus.Bus.RebusBus.Disposed"/> event
+            BEFORE the bus stops its workers
+            </summary>
+        </member>
+        <member name="E:Rebus.Bus.BusLifetimeEvents.WorkersStopped">
+            <summary>
+            Event that is raised when the bus is disposed BEFORE the bus raises its own <see cref="E:Rebus.Bus.RebusBus.Disposed"/> event, AFTER the bus has stopped all workers
+            </summary>
+        </member>
+        <member name="E:Rebus.Bus.BusLifetimeEvents.BusDisposed">
+            <summary>
+            Event that is raised when the bus is disposed AFTER the bus raises its own <see cref="E:Rebus.Bus.RebusBus.Disposed"/> event
             </summary>
         </member>
         <member name="T:Rebus.Bus.IBus">
@@ -622,6 +658,11 @@
             Gets the message ID from the message
             </summary>
         </member>
+        <member name="M:Rebus.Bus.MessageExtensions.GetMessageId(Rebus.Messages.TransportMessage)">
+            <summary>
+            Gets the message ID from the message
+            </summary>
+        </member>
         <member name="M:Rebus.Bus.MessageExtensions.GetMessageLabel(Rebus.Messages.Message)">
             <summary>
             Gets a nice label for the message, consisting of message type and ID if possible
@@ -635,6 +676,48 @@
         <member name="M:Rebus.Bus.MessageExtensions.Clone(Rebus.Messages.TransportMessage)">
             <summary>
             Returns a cloned instance of the transport message
+            </summary>
+        </member>
+        <member name="T:Rebus.Compression.DataCompressionMode">
+            <summary>
+            Enumerates strategies for when the data bus storage decorator GZIps the data
+            </summary>
+        </member>
+        <member name="F:Rebus.Compression.DataCompressionMode.Always">
+            <summary>
+            Always compresses data. Please note that this requires that data can be kept in memory as this
+            is required by the streaming APIs used when compressing data
+            </summary>
+        </member>
+        <member name="F:Rebus.Compression.DataCompressionMode.Explicit">
+            <summary>
+            Compresses data when the <see cref="F:Rebus.DataBus.MetadataKeys.ContentEncoding"/> key is detected among the metadata
+            of the save data and the value is "gzip"
+            </summary>
+        </member>
+        <member name="T:Rebus.Compression.ZippingDataBusStorageDecorator">
+            <summary>
+            Decorator for <see cref="T:Rebus.DataBus.IDataBusStorage"/> that GZIP-compresses data when it is streamed in/out
+            </summary>
+        </member>
+        <member name="M:Rebus.Compression.ZippingDataBusStorageDecorator.#ctor(Rebus.DataBus.IDataBusStorage,Rebus.Compression.DataCompressionMode)">
+            <summary>
+            Creates the decorator, wrapping the given <paramref name="innerDataBusStorage"/>
+            </summary>
+        </member>
+        <member name="M:Rebus.Compression.ZippingDataBusStorageDecorator.Read(System.String)">
+            <summary>
+            Opens the data stored under the given ID for reading
+            </summary>
+        </member>
+        <member name="M:Rebus.Compression.ZippingDataBusStorageDecorator.ReadMetadata(System.String)">
+            <summary>
+            Loads the metadata stored with the given ID
+            </summary>
+        </member>
+        <member name="M:Rebus.Compression.ZippingDataBusStorageDecorator.Save(System.String,System.IO.Stream,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Saves the data from the given source stream under the given ID
             </summary>
         </member>
         <member name="T:Rebus.Compression.ZipConfigurationExtensions">
@@ -651,6 +734,15 @@
             <summary>
             Enables compression of outgoing messages if the size exceeds the specified number of bytes
             (defaults to <see cref="F:Rebus.Compression.ZipConfigurationExtensions.DefaultBodyThresholdBytes"/>)
+            </summary>
+        </member>
+        <member name="M:Rebus.Compression.ZipConfigurationExtensions.UseCompression(Rebus.Config.StandardConfigurer{Rebus.DataBus.IDataBusStorage},Rebus.Compression.DataCompressionMode)">
+            <summary>
+            Enables GZIP of the saved data bus data. Set <paramref name="dataCompressionMode"/> to control when data is gzipped - if <see cref="F:Rebus.Compression.DataCompressionMode.Always"/>
+            is selected the data will always be GZIPped, whereas selecting <see cref="F:Rebus.Compression.DataCompressionMode.Explicit"/> makes the data be GZIPped
+            only when <see cref="F:Rebus.DataBus.MetadataKeys.ContentEncoding"/> = "gzip" is detected among the metadata for the stored data.
+            Please note that GZIPping the data requires that it can be fully contained in memory because the underlying streaming APIs do not support lazy-reading a
+            GZIP stream.
             </summary>
         </member>
         <member name="T:Rebus.Compression.Zipper">
@@ -741,6 +833,17 @@
             This is the default number of concurrent asynchrounous operations allowed, unless <see cref="P:Rebus.Config.Options.MaxParallelism"/> is set to something else
             </summary>
         </member>
+        <member name="F:Rebus.Config.Options.DefaultWorkerShutdownTimeout">
+            <summary>
+            This is the default timeout for workers to finish running active handlers, unless <see cref="P:Rebus.Config.Options.WorkerShutdownTimeout" /> is set to something else.
+            </summary>
+            <value>1 minute per default.</value>
+        </member>
+        <member name="F:Rebus.Config.Options.DefaultDueTimeoutsPollInterval">
+            <summary>
+            This is the default due timeouts poll interval which will be used unless overridde by <see cref="P:Rebus.Config.Options.DueTimeoutsPollInterval"/>
+            </summary>
+        </member>
         <member name="M:Rebus.Config.Options.#ctor">
             <summary>
             Constructs the options with the default settings
@@ -763,6 +866,16 @@
             Gets/sets the address to use if an external timeout manager is to be used
             </summary>
         </member>
+        <member name="P:Rebus.Config.Options.DueTimeoutsPollInterval">
+            <summary>
+            Gets/sets the poll interval when checking for due timeouts
+            </summary>
+        </member>
+        <member name="P:Rebus.Config.Options.WorkerShutdownTimeout">
+            <summary>
+            Gets/sets the maximum timeout for workers to finish running active handlers after being signaled to stop.
+            </summary>
+        </member>
         <member name="T:Rebus.Config.OptionsConfigurer">
             <summary>
             Allows for configuring additional options
@@ -779,9 +892,15 @@
             regardless of the number of workers
             </summary>
         </member>
-        <member name="M:Rebus.Config.OptionsConfigurer.UseExternalTimeoutManager(System.String)">
+        <member name="M:Rebus.Config.OptionsConfigurer.SetWorkerShutdownTimeout(System.TimeSpan)">
             <summary>
-            Configures Rebus to use another endpoint as the timeout manager
+            Configures the maximum timeout for workers to finish running active handlers after being signaled to stop.
+            </summary>
+        </member>
+        <member name="M:Rebus.Config.OptionsConfigurer.SetDueTimeoutsPollInteval(System.TimeSpan)">
+            <summary>
+            Configures the interval between polling the endpoint's configured <see cref="T:Rebus.Timeouts.ITimeoutManager"/> for due timeouts.
+            Defaults to <see cref="F:Rebus.Config.Options.DefaultDueTimeoutsPollInterval"/>
             </summary>
         </member>
         <member name="M:Rebus.Config.OptionsConfigurer.Register``1(System.Func{Rebus.Injection.IResolutionContext,``0},System.String)">
@@ -864,6 +983,13 @@
             for the <typeparamref name="TService"/> service.
             </summary>
         </member>
+        <member name="M:Rebus.Config.StandardConfigurer`1.GetConfigurerFrom(Rebus.Config.OptionsConfigurer)">
+            <summary>
+            Gets a standard configurer from the given options configurer. Can be used to provide
+            extensions to <see cref="T:Rebus.Config.OptionsConfigurer"/> that return a standard configurer that can then
+            be used to build further
+            </summary>
+        </member>
         <member name="M:Rebus.Config.StandardConfigurer`1.Register(System.Func{Rebus.Injection.IResolutionContext,`0},System.String)">
             <summary>
             Registers the given factory function as a resolve of the given <typeparamref name="TService"/> service
@@ -880,13 +1006,248 @@
             wants to replace the <see cref="T:Rebus.Subscriptions.ISubscriptionStorage"/> because it is capable of using the transport layer to do pub/sub
             </summary>
         </member>
+        <member name="T:Rebus.DataBus.DataBusAttachment">
+            <summary>
+            Model that represents a data bus attachment. Only the <see cref="P:Rebus.DataBus.DataBusAttachment.Id"/> is significant, as all the
+            other pieces of information are not required in order to retrieve the attachment from the database.
+            </summary>
+        </member>
+        <member name="M:Rebus.DataBus.DataBusAttachment.#ctor(System.String)">
+            <summary>
+            Creates a data bus attachment with the given ID
+            </summary>
+        </member>
+        <member name="P:Rebus.DataBus.DataBusAttachment.Id">
+            <summary>
+            Gets the ID of the attachment
+            </summary>
+        </member>
+        <member name="M:Rebus.DataBus.DataBusAttachment.OpenRead">
+            <summary>
+            Opens the attachment for reading, using the data bus of the bus that is handling the current message to read it.
+            Is only available for calling inside message handlers.
+            </summary>
+        </member>
+        <member name="M:Rebus.DataBus.DataBusAttachment.GetMetadata">
+            <summary>
+            Gets the metadata associated with the attachment, using the data bus of the bus that is handling the current message to read it.
+            Is only available for calling inside message handlers.
+            </summary>
+        </member>
+        <member name="M:Rebus.DataBus.DataBusAttachment.OpenRead(System.String)">
+            <summary>
+            Opens the attachment for reading, using the data bus of the bus that is handling the current message to read it.
+            Is only available for calling inside message handlers.
+            </summary>
+        </member>
+        <member name="M:Rebus.DataBus.DataBusAttachment.GetMetadata(System.String)">
+            <summary>
+            Gets the metadata associated with the attachment, using the data bus of the bus that is handling the current message to read it.
+            Is only available for calling inside message handlers.
+            </summary>
+        </member>
+        <member name="T:Rebus.DataBus.DataBusOptionsExtensions">
+            <summary>
+            Configuration extensions for Rebus' data bus
+            </summary>
+        </member>
+        <member name="M:Rebus.DataBus.DataBusOptionsExtensions.EnableDataBus(Rebus.Config.OptionsConfigurer)">
+            <summary>
+            Enables the data bus
+            </summary>
+        </member>
+        <member name="T:Rebus.DataBus.FileSystem.FileSystemDataBusExtensions">
+            <summary>
+            Provides extensions methods for configuring the file system storage for the data bus
+            </summary>
+        </member>
+        <member name="M:Rebus.DataBus.FileSystem.FileSystemDataBusExtensions.StoreInFileSystem(Rebus.Config.StandardConfigurer{Rebus.DataBus.IDataBusStorage},System.String)">
+            <summary>
+            Configures the data bus to store data in the file system
+            </summary>
+        </member>
+        <member name="T:Rebus.DataBus.FileSystem.FileSystemDataBusStorage">
+            <summary>
+            Implementation of <see cref="T:Rebus.DataBus.IDataBusStorage"/> that stores data in the file system. Could be a directory on a network share.
+            </summary>
+        </member>
+        <member name="M:Rebus.DataBus.FileSystem.FileSystemDataBusStorage.#ctor(System.String,Rebus.Logging.IRebusLoggerFactory)">
+            <summary>
+            Creates the data storage
+            </summary>
+        </member>
+        <member name="M:Rebus.DataBus.FileSystem.FileSystemDataBusStorage.Initialize">
+            <summary>
+            Initializes the file system data storage by ensuring that the configured data directory path exists and that it is writable
+            </summary>
+        </member>
+        <member name="M:Rebus.DataBus.FileSystem.FileSystemDataBusStorage.Save(System.String,System.IO.Stream,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Saves the data from the given strea under the given ID
+            </summary>
+        </member>
+        <member name="M:Rebus.DataBus.FileSystem.FileSystemDataBusStorage.Read(System.String)">
+            <summary>
+            Reads the data with the given ID and returns it as a stream
+            </summary>
+        </member>
+        <member name="M:Rebus.DataBus.FileSystem.FileSystemDataBusStorage.ReadMetadata(System.String)">
+            <summary>
+            Loads the metadata stored with the given ID
+            </summary>
+        </member>
+        <member name="T:Rebus.DataBus.InMem.InMemDataBusExtensions">
+            <summary>
+            Configuration extensions for the in-mem data bus
+            </summary>
+        </member>
+        <member name="M:Rebus.DataBus.InMem.InMemDataBusExtensions.StoreInMemory(Rebus.Config.StandardConfigurer{Rebus.DataBus.IDataBusStorage},Rebus.DataBus.InMem.InMemDataStore)">
+            <summary>
+            Configures the data bus to store data in memory. This is probably only useful for test scenarios, as the
+            passed-in <paramref name="inMemDataStore"/> needs to be shared among endpoints on the data bus.
+            </summary>
+        </member>
+        <member name="T:Rebus.DataBus.InMem.InMemDataStore">
+            <summary>
+            In-mem implementation of a data store that can be shared among buses that use the in-mem data bus.
+            A shared instance of this class should be passed to all endpoints when calling <see cref="M:Rebus.DataBus.InMem.InMemDataBusExtensions.StoreInMemory(Rebus.Config.StandardConfigurer{Rebus.DataBus.IDataBusStorage},Rebus.DataBus.InMem.InMemDataStore)"/>
+            </summary>
+        </member>
+        <member name="P:Rebus.DataBus.InMem.InMemDataStore.SizeBytes">
+            <summary>
+            Gets the total size in bytes 
+            </summary>
+        </member>
+        <member name="M:Rebus.DataBus.InMem.InMemDataStore.Save(System.String,System.Byte[],System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Saves the given bytes under the given ID
+            </summary>
+        </member>
+        <member name="M:Rebus.DataBus.InMem.InMemDataStore.Load(System.String)">
+            <summary>
+            Loads the bytes with the given ID. Throws a <see cref="T:System.ArgumentException"/> if no
+            such ID exists
+            </summary>
+        </member>
+        <member name="M:Rebus.DataBus.InMem.InMemDataStore.AddMetadata(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Adds the metadata from the <paramref name="metadata"/> dictionary to the blob with the given <paramref name="id"/>
+            </summary>
+        </member>
+        <member name="M:Rebus.DataBus.InMem.InMemDataStore.LoadMetadata(System.String)">
+            <summary>
+            Loads the metadata for the data with the given ID. Throws a <see cref="T:System.ArgumentException"/> if no
+            such ID exists
+            </summary>
+        </member>
+        <member name="T:Rebus.DataBus.IDataBus">
+            <summary>
+            API for Rebus' data bus
+            </summary>
+        </member>
+        <member name="M:Rebus.DataBus.IDataBus.CreateAttachment(System.IO.Stream,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Creates an attachment from the given source stream, optionally providing some extra metadata to be stored along with the attachment
+            </summary>
+        </member>
+        <member name="T:Rebus.DataBus.IDataBusStorage">
+            <summary>
+            Abstraction over the data bus storage
+            </summary>
+        </member>
+        <member name="M:Rebus.DataBus.IDataBusStorage.Save(System.String,System.IO.Stream,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Saves the data from the given source stream under the given ID
+            </summary>
+        </member>
+        <member name="M:Rebus.DataBus.IDataBusStorage.Read(System.String)">
+            <summary>
+            Opens the data stored under the given ID for reading
+            </summary>
+        </member>
+        <member name="M:Rebus.DataBus.IDataBusStorage.ReadMetadata(System.String)">
+            <summary>
+            Loads the metadata stored with the given ID
+            </summary>
+        </member>
+        <member name="T:Rebus.DataBus.MetadataKeys">
+            <summary>
+            Contains keys of standard metadata which is always available on data stored with the data bus
+            </summary>
+        </member>
+        <member name="F:Rebus.DataBus.MetadataKeys.Length">
+            <summary>
+            Metadata key of the length in bytes of the stored data
+            </summary>
+        </member>
+        <member name="F:Rebus.DataBus.MetadataKeys.SaveTime">
+            <summary>
+            Metadata key of the ISO8601-encoded time of when the data was stored
+            </summary>
+        </member>
+        <member name="F:Rebus.DataBus.MetadataKeys.ReadTime">
+            <summary>
+            Metadata key of the ISO8601-encoding time of when the data was last read
+            </summary>
+        </member>
+        <member name="F:Rebus.DataBus.MetadataKeys.ContentEncoding">
+            <summary>
+            Optional header that might contain an encoding of the contents, e.g."gzip" for gzipped data.
+            </summary>
+        </member>
+        <member name="T:Rebus.DataBus.SqlServer.SqlServerDataBusConfigurationExtensions">
+            <summary>
+            Configuration extensions for SQL Server data bus
+            </summary>
+        </member>
+        <member name="M:Rebus.DataBus.SqlServer.SqlServerDataBusConfigurationExtensions.StoreInSqlServer(Rebus.Config.StandardConfigurer{Rebus.DataBus.IDataBusStorage},System.String,System.String,System.Boolean)">
+            <summary>
+            Configures the data bus to store data in a central SQL Server 
+            </summary>
+        </member>
+        <member name="M:Rebus.DataBus.SqlServer.SqlServerDataBusConfigurationExtensions.StoreInSqlServer(Rebus.Config.StandardConfigurer{Rebus.DataBus.IDataBusStorage},System.Func{System.Threading.Tasks.Task{Rebus.Persistence.SqlServer.IDbConnection}},System.String,System.Boolean)">
+            <summary>
+            Configures the data bus to store data in a central SQL Server 
+            </summary>
+        </member>
+        <member name="T:Rebus.DataBus.SqlServer.SqlServerDataBusStorage">
+            <summary>
+            Implementation of <see cref="T:Rebus.DataBus.IDataBusStorage"/> that uses SQL Server to store data
+            </summary>
+        </member>
+        <member name="M:Rebus.DataBus.SqlServer.SqlServerDataBusStorage.#ctor(Rebus.Persistence.SqlServer.IDbConnectionProvider,System.String,System.Boolean,Rebus.Logging.IRebusLoggerFactory)">
+            <summary>
+            Creates the data storage
+            </summary>
+        </member>
+        <member name="M:Rebus.DataBus.SqlServer.SqlServerDataBusStorage.Initialize">
+            <summary>
+            Initializes the SQL Server data storage.
+            Will create the data table, unless this has been explicitly turned off when configuring the data storage
+            </summary>
+        </member>
+        <member name="M:Rebus.DataBus.SqlServer.SqlServerDataBusStorage.Save(System.String,System.IO.Stream,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Saves the data from the given source stream under the given ID
+            </summary>
+        </member>
+        <member name="M:Rebus.DataBus.SqlServer.SqlServerDataBusStorage.Read(System.String)">
+            <summary>
+            Opens the data stored under the given ID for reading
+            </summary>
+        </member>
+        <member name="M:Rebus.DataBus.SqlServer.SqlServerDataBusStorage.ReadMetadata(System.String)">
+            <summary>
+            Loads the metadata stored with the given ID
+            </summary>
+        </member>
         <member name="T:Rebus.Encryption.DecryptMessagesIncomingStep">
             <summary>
             Incoming message step that checks for the prensence of the <see cref="F:Rebus.Encryption.EncryptionHeaders.ContentEncryption"/> header, decrypting
             the message body if it is present.
             </summary>
         </member>
-        <member name="M:Rebus.Encryption.DecryptMessagesIncomingStep.#ctor(Rebus.Encryption.Encryptor)">
+        <member name="M:Rebus.Encryption.DecryptMessagesIncomingStep.#ctor(Rebus.Encryption.IEncryptor)">
             <summary>
             Constructs the step with the given encryptor
             </summary>
@@ -906,14 +1267,14 @@
             Constructs an instance from the given bytes and iv.
             </summary>
         </member>
-        <member name="P:Rebus.Encryption.EncryptedData.Bytes">
-            <summary>
-            Gets the raw data from this encrypted data instance
-            </summary>
-        </member>
         <member name="P:Rebus.Encryption.EncryptedData.Iv">
             <summary>
             Gets the salt (a.k.a. "Initialization Vector"/"IV") from this encrypted data instance
+            </summary>
+        </member>
+        <member name="P:Rebus.Encryption.EncryptedData.Bytes">
+            <summary>
+            Gets the raw data from this encrypted data instance
             </summary>
         </member>
         <member name="T:Rebus.Encryption.EncryptionConfigurationExtensions">
@@ -923,8 +1284,25 @@
         </member>
         <member name="M:Rebus.Encryption.EncryptionConfigurationExtensions.EnableEncryption(Rebus.Config.OptionsConfigurer,System.String)">
             <summary>
-            Configures Rebus to encrypt outgoing messages and be able to decrypt incoming messages. Please note that it's only the message bodies that are
-            encrypted, thus everything included in the message headers will be visible to eavesdroppers.
+            Configures Rebus to encrypt outgoing messages and be able to decrypt incoming messages. 
+            Uses the default "Rijndael" algorithm which is 256 bit AES encryption.
+            Please note that it's only the message bodies that are encrypted, thus everything included in the message headers will be visible to eavesdroppers.
+            </summary>
+        </member>
+        <member name="M:Rebus.Encryption.EncryptionConfigurationExtensions.EnableCustomEncryption(Rebus.Config.OptionsConfigurer)">
+            <summary>
+            Configures Rebus to encrypt outgoing messages and be able to decrypt incoming messages using custom encryption provider.
+            Please note that it's only the message bodies that are encrypted, thus everything included in the message headers will be visible to eavesdroppers.
+            Custom encrypotion providers are configured by building on the returned configurer, e.g. like so:
+            <code>
+            Configure.With(...)
+                .(...)
+                .Options(o => {
+                    o.EnableCustomEncryption()
+                        .Use***();
+                })
+                .Start();
+            </code>
             </summary>
         </member>
         <member name="T:Rebus.Encryption.EncryptionHeaders">
@@ -942,12 +1320,17 @@
             When the contents have been encrypted, this header has the IV
             </summary>
         </member>
+        <member name="F:Rebus.Encryption.EncryptionHeaders.DisableEncryptionHeader">
+            <summary>
+            Special header that can be added to a message in order to disable encryption for that particular message
+            </summary>
+        </member>
         <member name="T:Rebus.Encryption.EncryptMessagesOutgoingStep">
             <summary>
             Outgoing pipeline step that encrypts the contents of the outgoing message
             </summary>
         </member>
-        <member name="M:Rebus.Encryption.EncryptMessagesOutgoingStep.#ctor(Rebus.Encryption.Encryptor)">
+        <member name="M:Rebus.Encryption.EncryptMessagesOutgoingStep.#ctor(Rebus.Encryption.IEncryptor)">
             <summary>
             Constructs the step with the given encryptor
             </summary>
@@ -957,26 +1340,51 @@
             Encrypts the outgoing <see cref="T:Rebus.Messages.TransportMessage"/> and adds appropriate headers
             </summary>
         </member>
-        <member name="T:Rebus.Encryption.Encryptor">
+        <member name="T:Rebus.Encryption.RijndaelEncryptor">
             <summary>
             Helps with encrypting/decripting byte arrays, using the <see cref="T:System.Security.Cryptography.RijndaelManaged"/> algorithm
             </summary>
         </member>
-        <member name="M:Rebus.Encryption.Encryptor.#ctor(System.String)">
+        <member name="P:Rebus.Encryption.RijndaelEncryptor.ContentEncryptionValue">
+            <summary>
+            Returns "rijndael" string
+            </summary>
+        </member>
+        <member name="M:Rebus.Encryption.RijndaelEncryptor.#ctor(System.String)">
             <summary>
             Creates the encrptor with the specified key - the key must be a valid, base64-encoded key
             </summary>
             <param name="key"></param>
         </member>
-        <member name="M:Rebus.Encryption.Encryptor.Encrypt(System.Byte[])">
+        <member name="M:Rebus.Encryption.RijndaelEncryptor.Encrypt(System.Byte[])">
             <summary>
             Encrypts the given array of bytes, using the configured key. Returns an <see cref="T:Rebus.Encryption.EncryptedData"/> containing the encrypted
             bytes and the generated salt.
             </summary>
         </member>
-        <member name="M:Rebus.Encryption.Encryptor.Decrypt(Rebus.Encryption.EncryptedData)">
+        <member name="M:Rebus.Encryption.RijndaelEncryptor.Decrypt(Rebus.Encryption.EncryptedData)">
             <summary>
             Decrypts the given <see cref="T:Rebus.Encryption.EncryptedData"/> using the configured key.
+            </summary>
+        </member>
+        <member name="T:Rebus.Encryption.IEncryptor">
+            <summary>
+            Interface to provide encryption/decryption custom implementation
+            </summary>
+        </member>
+        <member name="P:Rebus.Encryption.IEncryptor.ContentEncryptionValue">
+            <summary>
+            Header name that will be added to an encrypted message
+            </summary>
+        </member>
+        <member name="M:Rebus.Encryption.IEncryptor.Decrypt(Rebus.Encryption.EncryptedData)">
+            <summary>
+            Decrypts the encrypted data
+            </summary>
+        </member>
+        <member name="M:Rebus.Encryption.IEncryptor.Encrypt(System.Byte[])">
+            <summary>
+            Encrypts the given bytes and returns the encrypted data alond with the salt in the returned <see cref="T:Rebus.Encryption.EncryptedData"/>
             </summary>
         </member>
         <member name="T:Rebus.Exceptions.RebusApplicationException">
@@ -984,12 +1392,12 @@
             Generic application exception to use when something bad happens that is pretty unexpected and should be taken seriously
             </summary>
         </member>
-        <member name="M:Rebus.Exceptions.RebusApplicationException.#ctor(System.String,System.Object[])">
+        <member name="M:Rebus.Exceptions.RebusApplicationException.#ctor(System.String)">
             <summary>
             Constructs the exception with the given message
             </summary>
         </member>
-        <member name="M:Rebus.Exceptions.RebusApplicationException.#ctor(System.Exception,System.String,System.Object[])">
+        <member name="M:Rebus.Exceptions.RebusApplicationException.#ctor(System.Exception,System.String)">
             <summary>
             Constructs the exception with the given message and inner exception
             </summary>
@@ -1344,6 +1752,11 @@
             Creates the header attribute with the given key and value
             </summary>
         </member>
+        <member name="M:Rebus.Messages.HeaderAttribute.#ctor(System.String)">
+            <summary>
+            Creates the header attribute with the given key and an empty value
+            </summary>
+        </member>
         <member name="T:Rebus.Messages.Control.SubscribeRequest">
             <summary>
             Control message that can be used to establish a subscription of a given topic to the endpoint with the given address.
@@ -1549,19 +1962,87 @@
             Configures Rebus to use JSON files to store snapshots of saga data
             </summary>
         </member>
+        <member name="T:Rebus.Persistence.FileSystem.FilesystemSagaStorage">
+            <summary>
+            Implementation of <see cref="T:Rebus.Sagas.ISagaStorage"/> that uses the file system to store data
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.FileSystem.FilesystemSagaStorage.#ctor(System.String,Rebus.Logging.IRebusLoggerFactory)">
+            <summary>
+            Creates the saga storage using the given <paramref name="basePath"/> 
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.FileSystem.FilesystemSagaStorage.Find(System.Type,System.String,System.Object)">
+            <summary>
+            Looks up an existing saga data instance from the index file
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.FileSystem.FilesystemSagaStorage.Insert(Rebus.Sagas.ISagaData,System.Collections.Generic.IEnumerable{Rebus.Sagas.ISagaCorrelationProperty})">
+            <summary>
+            Inserts the given saga data instance into the index file
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.FileSystem.FilesystemSagaStorage.Update(Rebus.Sagas.ISagaData,System.Collections.Generic.IEnumerable{Rebus.Sagas.ISagaCorrelationProperty})">
+            <summary>
+            Updates the given saga data instance in the index file
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.FileSystem.FilesystemSagaStorage.Delete(Rebus.Sagas.ISagaData)">
+            <summary>
+            Removes the saga data instance from the index file
+            </summary>
+        </member>
+        <member name="T:Rebus.Persistence.FileSystem.FileSystemSagaStorageConfigurationExtensions">
+            <summary>
+            Configures extensions for using the filesystem to store sagas
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.FileSystem.FileSystemSagaStorageConfigurationExtensions.UseFilesystem(Rebus.Config.StandardConfigurer{Rebus.Sagas.ISagaStorage},System.String)">
+            <summary>
+            Configures Rebus to use the filesystem to store sagas. Please note that this way of storing saga data is not
+            the most effective, and therefore it is probably best suited for testing and very simple and mild requirements
+            </summary>
+        </member>
+        <member name="T:Rebus.Persistence.FileSystem.FilesystemTimeoutManager">
+            <summary>
+            Implementation of <see cref="T:Rebus.Timeouts.ITimeoutManager"/> that stores timeouts in the filesystem
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.FileSystem.FilesystemTimeoutManager.#ctor(System.String,Rebus.Logging.IRebusLoggerFactory)">
+            <summary>
+            Creates the timeout manager, storing timeouts in the given <paramref name="basePath"/>
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.FileSystem.FilesystemTimeoutManager.Defer(System.DateTimeOffset,System.Collections.Generic.Dictionary{System.String,System.String},System.Byte[])">
+            <summary>
+            Stores the message to be retrieved later
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.FileSystem.FilesystemTimeoutManager.GetDueMessages">
+            <summary>
+            Gets all messages that are due at this instant
+            </summary>
+        </member>
+        <member name="T:Rebus.Persistence.FileSystem.FilesystemTimeoutStorageConfigurationExtensions">
+            <summary>
+            Configures the bus to use the filesystem to store timeouts
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.FileSystem.FilesystemTimeoutStorageConfigurationExtensions.UseFilesystem(Rebus.Config.StandardConfigurer{Rebus.Timeouts.ITimeoutManager},System.String)">
+            <summary>
+            Configures the bus to use the filesystem to store timeouts
+            </summary>
+            <param name="configurer">the rebus configuration</param>
+            <param name="basePath">the path to store timeouts under</param>
+        </member>
         <member name="T:Rebus.Persistence.FileSystem.JsonFileSubscriptionStorage">
             <summary>
             Implementation of <see cref="T:Rebus.Subscriptions.ISubscriptionStorage"/> that stores subscriptions in a JSON file. Access to the file is synchronized within the process with a <see cref="T:System.Threading.ReaderWriterLockSlim"/>
             </summary>
         </member>
-        <member name="M:Rebus.Persistence.FileSystem.JsonFileSubscriptionStorage.#ctor(System.String)">
+        <member name="M:Rebus.Persistence.FileSystem.JsonFileSubscriptionStorage.#ctor(System.String,System.Boolean)">
             <summary>
             Constructs the subscription storage
-            </summary>
-        </member>
-        <member name="M:Rebus.Persistence.FileSystem.JsonFileSubscriptionStorage.Finalize">
-            <summary>
-            Last-resort disposal of the <see cref="T:System.Threading.ReaderWriterLockSlim"/>
             </summary>
         </member>
         <member name="M:Rebus.Persistence.FileSystem.JsonFileSubscriptionStorage.GetSubscriberAddresses(System.String)">
@@ -1584,11 +2065,6 @@
             Gets whether this subscription storage is centralized (which it shouldn't be - that would probably cause some pretty nasty locking exceptions!)
             </summary>
         </member>
-        <member name="M:Rebus.Persistence.FileSystem.JsonFileSubscriptionStorage.Dispose(System.Boolean)">
-            <summary>
-            Releases the reader/writer lock held by the subscription storage
-            </summary>
-        </member>
         <member name="M:Rebus.Persistence.FileSystem.JsonFileSubscriptionStorage.Dispose">
             <summary>
             Disposes the <see cref="T:System.Threading.ReaderWriterLockSlim"/> that guards access to the file
@@ -1602,6 +2078,175 @@
         <member name="M:Rebus.Persistence.FileSystem.JsonFileSubscriptionStorageConfigurationExtensions.UseJsonFile(Rebus.Config.StandardConfigurer{Rebus.Subscriptions.ISubscriptionStorage},System.String)">
             <summary>
             Configures Rebus to use a JSON file as the subscription storage
+            </summary>
+        </member>
+        <member name="T:Rebus.Persistence.InMem.InMemorySubscriberStore">
+            <summary>
+            In-mem subscriber store that can be shared among multiple endpoints to emulate a shared subscription storage
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.InMem.InMemorySubscriberStore.GetSubscribers(System.String)">
+            <summary>
+            Gets the subscribers for the current topic
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.InMem.InMemorySubscriberStore.AddSubscriber(System.String,System.String)">
+            <summary>
+            Adds the subscriber with the given <paramref name="subscriberAddress"/> to the list of subscribers for the given <paramref name="topic"/>
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.InMem.InMemorySubscriberStore.RemoveSubscriber(System.String,System.String)">
+            <summary>
+            Removes the subscriber with the given <paramref name="subscriberAddress"/> from the list of subscribers for the given <paramref name="topic"/>
+            </summary>
+        </member>
+        <member name="T:Rebus.Persistence.InMem.InMemorySubscriptionStorageExtensions">
+            <summary>
+            Configuration extensions for in-mem subscriptionstorage
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.InMem.InMemorySubscriptionStorageExtensions.StoreInMemory(Rebus.Config.StandardConfigurer{Rebus.Subscriptions.ISubscriptionStorage},Rebus.Persistence.InMem.InMemorySubscriberStore)">
+            <summary>
+            Configures Rebus to store subscriptions in memory. The subscription storage is assumed to be CENTRALIZED
+            with this overload because a <see cref="T:Rebus.Persistence.InMem.InMemorySubscriberStore"/> is passed in.  PLEASE NOTE that this 
+            is probably not useful for any other scenario  than TESTING because usually you want subscriptions to be PERSISTENT.
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.InMem.InMemorySubscriptionStorageExtensions.StoreInMemory(Rebus.Config.StandardConfigurer{Rebus.Subscriptions.ISubscriptionStorage})">
+            <summary>
+            Configures Rebus to store subscriptions in memory. The subscription storage is assumed to be DECENTRALIZED
+            with this overload because NO <see cref="T:Rebus.Persistence.InMem.InMemorySubscriberStore"/> is passed in and subscriptions are therefore private
+            for this endpoint.  PLEASE NOTE that this  is probably not useful for any other scenario  than TESTING because usually you want 
+            subscriptions to be PERSISTENT.
+            </summary>
+        </member>
+        <member name="T:Rebus.Persistence.InMem.InMemorySagaStorage">
+            <summary>
+            Implementation of <see cref="T:Rebus.Sagas.ISagaStorage"/> that "persists" saga data in memory. Saga data is serialized/deserialized using Newtonsoft JSON.NET
+            with some pretty robust settings, so inheritance and interfaces etc. can be used in the saga data.
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.InMem.InMemorySagaStorage.Find(System.Type,System.String,System.Object)">
+            <summary>
+            Looks up an existing saga data of the given type with a property of the specified name and the specified value
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.InMem.InMemorySagaStorage.Insert(Rebus.Sagas.ISagaData,System.Collections.Generic.IEnumerable{Rebus.Sagas.ISagaCorrelationProperty})">
+            <summary>
+            Saves the given saga data, throwing an exception if the instance already exists
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.InMem.InMemorySagaStorage.Update(Rebus.Sagas.ISagaData,System.Collections.Generic.IEnumerable{Rebus.Sagas.ISagaCorrelationProperty})">
+            <summary>
+            Updates the saga data
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.InMem.InMemorySagaStorage.Delete(Rebus.Sagas.ISagaData)">
+            <summary>
+            Deletes the given saga data
+            </summary>
+        </member>
+        <member name="T:Rebus.Persistence.InMem.InMemorySubscriptionStorage">
+            <summary>
+            Implementation of <see cref="T:Rebus.Subscriptions.ISubscriptionStorage"/> that "persists" subscriptions in memory.
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.InMem.InMemorySubscriptionStorage.#ctor">
+            <summary>
+            Creates the in-mem subscription storage as a decentralized subscription storage with its
+            own private subscriber store
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.InMem.InMemorySubscriptionStorage.#ctor(Rebus.Persistence.InMem.InMemorySubscriberStore)">
+            <summary>
+            Creates the in-mem subscription storage as a centralized subscription storage, using the given
+            <see cref="T:Rebus.Persistence.InMem.InMemorySubscriberStore"/> to share subscriptions
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.InMem.InMemorySubscriptionStorage.GetSubscriberAddresses(System.String)">
+            <summary>
+            Gets all destination addresses for the given topic
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.InMem.InMemorySubscriptionStorage.RegisterSubscriber(System.String,System.String)">
+            <summary>
+            Registers the given <paramref name="subscriberAddress"/> as a subscriber of the given topic
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.InMem.InMemorySubscriptionStorage.UnregisterSubscriber(System.String,System.String)">
+            <summary>
+            Unregisters the given <paramref name="subscriberAddress"/> as a subscriber of the given topic
+            </summary>
+        </member>
+        <member name="P:Rebus.Persistence.InMem.InMemorySubscriptionStorage.IsCentralized">
+            <summary>
+            Gets whether the subscription storage is centralized and thus supports bypassing the usual subscription request
+            (in a fully distributed architecture, a subscription is established by sending a <see cref="T:Rebus.Messages.Control.SubscribeRequest"/>
+            to the owner of a given topic, who then remembers the subscriber somehow - if the subscription storage is
+            centralized, the message exchange can be bypassed, and the subscription can be established directly by
+            having the subscriber register itself)
+            </summary>
+        </member>
+        <member name="T:Rebus.Persistence.InMem.InMemoryTimeoutManager">
+            <summary>
+            Implementation of <see cref="T:Rebus.Timeouts.ITimeoutManager"/> that "persists" timeouts in memory.
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.InMem.InMemoryTimeoutManager.Defer(System.DateTimeOffset,System.Collections.Generic.Dictionary{System.String,System.String},System.Byte[])">
+            <summary>
+            Stores the message with the given headers and body data, delaying it until the specified <paramref name="approximateDueTime"/>
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.InMem.InMemoryTimeoutManager.GetDueMessages">
+            <summary>
+            Gets due messages as of now, given the approximate due time that they were stored with when <see cref="M:Rebus.Timeouts.ITimeoutManager.Defer(System.DateTimeOffset,System.Collections.Generic.Dictionary{System.String,System.String},System.Byte[])"/> was called
+            </summary>
+        </member>
+        <member name="T:Rebus.Persistence.InMem.InMemoryTimeoutManager.DeferredMessage">
+            <summary>
+            Represents a message whose delivery has been deferred into the future
+            </summary>
+        </member>
+        <member name="P:Rebus.Persistence.InMem.InMemoryTimeoutManager.DeferredMessage.DueTime">
+            <summary>
+            Gets the time of when delivery of this message is due
+            </summary>
+        </member>
+        <member name="P:Rebus.Persistence.InMem.InMemoryTimeoutManager.DeferredMessage.Headers">
+            <summary>
+            Gets the message's headers
+            </summary>
+        </member>
+        <member name="P:Rebus.Persistence.InMem.InMemoryTimeoutManager.DeferredMessage.Body">
+            <summary>
+            Gets the message's body
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.InMem.InMemoryTimeoutManager.GetEnumerator">
+            <summary>
+            Gets an enumerator that allows for iterating through all stored deferred messages
+            </summary>
+        </member>
+        <member name="T:Rebus.Persistence.SqlServer.DbConnectionFactoryProvider">
+            <summary>
+            Implementation of <see cref="T:Rebus.Persistence.SqlServer.IDbConnectionProvider"/> that ensures that MARS (multiple active result sets) is enabled on the
+            given connection string (possibly by enabling it by itself)
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.SqlServer.DbConnectionFactoryProvider.#ctor(System.Func{System.Threading.Tasks.Task{Rebus.Persistence.SqlServer.IDbConnection}},Rebus.Logging.IRebusLoggerFactory)">
+            <summary>
+            Uses provided SqlConnection factory as constructor for SqlConnection used. Will use <see cref="F:System.Data.IsolationLevel.ReadCommitted"/> by default on transactions,
+            unless another isolation level is set with the <see cref="P:Rebus.Persistence.SqlServer.DbConnectionFactoryProvider.IsolationLevel"/> property
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.SqlServer.DbConnectionFactoryProvider.GetConnection">
+            <summary>
+            Gets a nice ready-to-use database connection with an open transaction
+            </summary>
+        </member>
+        <member name="P:Rebus.Persistence.SqlServer.DbConnectionFactoryProvider.IsolationLevel">
+            <summary>
+            Gets/sets the isolation level used for transactions
             </summary>
         </member>
         <member name="T:Rebus.Persistence.SqlServer.SqlServerSagaSnapshotStorage">
@@ -1636,11 +2281,6 @@
             is handled outside of the wrapper
             </summary>
         </member>
-        <member name="M:Rebus.Persistence.SqlServer.DbConnectionWrapper.Finalize">
-            <summary>
-            Ensures that the wrapper is always disposed
-            </summary>
-        </member>
         <member name="M:Rebus.Persistence.SqlServer.DbConnectionWrapper.CreateCommand">
             <summary>
             Creates a ready to used <see cref="T:System.Data.SqlClient.SqlCommand"/>
@@ -1649,6 +2289,11 @@
         <member name="M:Rebus.Persistence.SqlServer.DbConnectionWrapper.GetTableNames">
             <summary>
             Gets the names of all the tables in the current database for the current schema
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.SqlServer.DbConnectionWrapper.GetColumns(System.String)">
+            <summary>
+            Gets information about the columns in the table given by <paramref name="dataTableName"/>
             </summary>
         </member>
         <member name="M:Rebus.Persistence.SqlServer.DbConnectionWrapper.Complete">
@@ -1660,12 +2305,6 @@
             <summary>
             Finishes the transaction and disposes the connection in order to return it to the connection pool. If the transaction
             has not been committed (by calling <see cref="M:Rebus.Persistence.SqlServer.DbConnectionWrapper.Complete"/>), the transaction will be rolled back.
-            </summary>
-        </member>
-        <member name="M:Rebus.Persistence.SqlServer.DbConnectionWrapper.Dispose(System.Boolean)">
-            <summary>
-            If the transaction is handled externally, nothing is done when the wrapper is disposed. Otherwise, the connection
-            is closed and disposed, and the current transaction is rolled back if <see cref="M:Rebus.Persistence.SqlServer.DbConnectionWrapper.Complete"/> was not called
             </summary>
         </member>
         <member name="T:Rebus.Persistence.SqlServer.IDbConnection">
@@ -1687,6 +2326,31 @@
         <member name="M:Rebus.Persistence.SqlServer.IDbConnection.Complete">
             <summary>
             Marks that all work has been successfully done and the <see cref="T:System.Data.SqlClient.SqlConnection"/> may have its transaction committed or whatever is natural to do at this time
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.SqlServer.IDbConnection.GetColumns(System.String)">
+            <summary>
+            Gets information about the columns in the table given by <paramref name="dataTableName"/>
+            </summary>
+        </member>
+        <member name="T:Rebus.Persistence.SqlServer.DbColumn">
+            <summary>
+            Represents a SQL Server column
+            </summary>
+        </member>
+        <member name="P:Rebus.Persistence.SqlServer.DbColumn.Name">
+            <summary>
+            Gets the name of the column
+            </summary>
+        </member>
+        <member name="P:Rebus.Persistence.SqlServer.DbColumn.Type">
+            <summary>
+            Gets the SQL datatype of the column
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.SqlServer.DbColumn.#ctor(System.String,System.Data.SqlDbType)">
+            <summary>
+            Creates the column
             </summary>
         </member>
         <member name="T:Rebus.Persistence.SqlServer.IDbConnectionProvider">
@@ -1743,6 +2407,16 @@
             Gets the names of all tables in the current database
             </summary>
         </member>
+        <member name="M:Rebus.Persistence.SqlServer.SqlServerMagic.GetIndexNames(System.Data.SqlClient.SqlConnection,System.Data.SqlClient.SqlTransaction)">
+            <summary>
+            Gets the names of all indexes in the current database
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.SqlServer.SqlServerMagic.GetColumns(System.Data.SqlClient.SqlConnection,System.String,System.Data.SqlClient.SqlTransaction)">
+            <summary>
+            Gets the names of all tables in the current database
+            </summary>
+        </member>
         <member name="M:Rebus.Persistence.SqlServer.SqlServerMagic.GetDatabaseNames(System.Data.SqlClient.SqlConnection,System.Data.SqlClient.SqlTransaction)">
             <summary>
             Gets the names of all databases on the current server
@@ -1758,7 +2432,17 @@
             Configures Rebus to store saga snapshots in SQL Server
             </summary>
         </member>
+        <member name="M:Rebus.Persistence.SqlServer.SqlServerPersistenceConfigurationExtensions.StoreInSqlServer(Rebus.Config.StandardConfigurer{Rebus.Auditing.Sagas.ISagaSnapshotStorage},System.Func{System.Threading.Tasks.Task{Rebus.Persistence.SqlServer.IDbConnection}},System.String,System.Boolean)">
+            <summary>
+            Configures Rebus to store saga snapshots in SQL Server
+            </summary>
+        </member>
         <member name="M:Rebus.Persistence.SqlServer.SqlServerPersistenceConfigurationExtensions.StoreInSqlServer(Rebus.Config.StandardConfigurer{Rebus.Sagas.ISagaStorage},System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Configures Rebus to use SQL Server to store sagas, using the tables specified to store data and indexed properties respectively.
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.SqlServer.SqlServerPersistenceConfigurationExtensions.StoreInSqlServer(Rebus.Config.StandardConfigurer{Rebus.Sagas.ISagaStorage},System.Func{System.Threading.Tasks.Task{Rebus.Persistence.SqlServer.IDbConnection}},System.String,System.String,System.Boolean)">
             <summary>
             Configures Rebus to use SQL Server to store sagas, using the tables specified to store data and indexed properties respectively.
             </summary>
@@ -1770,7 +2454,19 @@
             default behavior.
             </summary>
         </member>
+        <member name="M:Rebus.Persistence.SqlServer.SqlServerPersistenceConfigurationExtensions.StoreInSqlServer(Rebus.Config.StandardConfigurer{Rebus.Subscriptions.ISubscriptionStorage},System.Func{System.Threading.Tasks.Task{Rebus.Persistence.SqlServer.IDbConnection}},System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Configures Rebus to use SQL Server to store subscriptions. Use <paramref name="isCentralized"/> = true to indicate whether it's OK to short-circuit
+            subscribing and unsubscribing by manipulating the subscription directly from the subscriber or just let it default to false to preserve the
+            default behavior.
+            </summary>
+        </member>
         <member name="M:Rebus.Persistence.SqlServer.SqlServerPersistenceConfigurationExtensions.StoreInSqlServer(Rebus.Config.StandardConfigurer{Rebus.Timeouts.ITimeoutManager},System.String,System.String,System.Boolean)">
+            <summary>
+            Configures Rebus to use SQL Server to store timeouts.
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.SqlServer.SqlServerPersistenceConfigurationExtensions.StoreInSqlServer(Rebus.Config.StandardConfigurer{Rebus.Timeouts.ITimeoutManager},System.Func{System.Threading.Tasks.Task{Rebus.Persistence.SqlServer.IDbConnection}},System.String,System.Boolean)">
             <summary>
             Configures Rebus to use SQL Server to store timeouts.
             </summary>
@@ -1785,6 +2481,11 @@
         <member name="M:Rebus.Persistence.SqlServer.SqlServerSagaStorage.#ctor(Rebus.Persistence.SqlServer.IDbConnectionProvider,System.String,System.String,Rebus.Logging.IRebusLoggerFactory)">
             <summary>
             Constructs the saga storage, using the specified connection provider and tables for persistence.
+            </summary>
+        </member>
+        <member name="M:Rebus.Persistence.SqlServer.SqlServerSagaStorage.Initialize">
+            <summary>
+            Initializes the storage by performing a check on the schema to see whether we should use
             </summary>
         </member>
         <member name="M:Rebus.Persistence.SqlServer.SqlServerSagaStorage.EnsureTablesAreCreated">
@@ -1874,101 +2575,6 @@
         <member name="M:Rebus.Persistence.SqlServer.SqlServerTimeoutManager.GetDueMessages">
             <summary>
             Gets messages due for delivery at the current time
-            </summary>
-        </member>
-        <member name="T:Rebus.Persistence.InMem.InMemorySagaStorage">
-            <summary>
-            Implementation of <see cref="T:Rebus.Sagas.ISagaStorage"/> that "persists" saga data in memory. Saga data is serialized/deserialized using Newtonsoft JSON.NET
-            with some pretty robust settings, so inheritance and interfaces etc. can be used in the saga data.
-            </summary>
-        </member>
-        <member name="M:Rebus.Persistence.InMem.InMemorySagaStorage.Find(System.Type,System.String,System.Object)">
-            <summary>
-            Looks up an existing saga data of the given type with a property of the specified name and the specified value
-            </summary>
-        </member>
-        <member name="M:Rebus.Persistence.InMem.InMemorySagaStorage.Insert(Rebus.Sagas.ISagaData,System.Collections.Generic.IEnumerable{Rebus.Sagas.ISagaCorrelationProperty})">
-            <summary>
-            Saves the given saga data, throwing an exception if the instance already exists
-            </summary>
-        </member>
-        <member name="M:Rebus.Persistence.InMem.InMemorySagaStorage.Update(Rebus.Sagas.ISagaData,System.Collections.Generic.IEnumerable{Rebus.Sagas.ISagaCorrelationProperty})">
-            <summary>
-            Updates the saga data
-            </summary>
-        </member>
-        <member name="M:Rebus.Persistence.InMem.InMemorySagaStorage.Delete(Rebus.Sagas.ISagaData)">
-            <summary>
-            Deletes the given saga data
-            </summary>
-        </member>
-        <member name="T:Rebus.Persistence.InMem.InMemorySubscriptionStorage">
-            <summary>
-            Implementation of <see cref="T:Rebus.Subscriptions.ISubscriptionStorage"/> that "persists" subscriptions in memory.
-            </summary>
-        </member>
-        <member name="M:Rebus.Persistence.InMem.InMemorySubscriptionStorage.GetSubscriberAddresses(System.String)">
-            <summary>
-            Gets all destination addresses for the given topic
-            </summary>
-        </member>
-        <member name="M:Rebus.Persistence.InMem.InMemorySubscriptionStorage.RegisterSubscriber(System.String,System.String)">
-            <summary>
-            Registers the given <paramref name="subscriberAddress"/> as a subscriber of the given topic
-            </summary>
-        </member>
-        <member name="M:Rebus.Persistence.InMem.InMemorySubscriptionStorage.UnregisterSubscriber(System.String,System.String)">
-            <summary>
-            Unregisters the given <paramref name="subscriberAddress"/> as a subscriber of the given topic
-            </summary>
-        </member>
-        <member name="P:Rebus.Persistence.InMem.InMemorySubscriptionStorage.IsCentralized">
-            <summary>
-            Gets whether the subscription storage is centralized and thus supports bypassing the usual subscription request
-            (in a fully distributed architecture, a subscription is established by sending a <see cref="T:Rebus.Messages.Control.SubscribeRequest"/>
-            to the owner of a given topic, who then remembers the subscriber somehow - if the subscription storage is
-            centralized, the message exchange can be bypassed, and the subscription can be established directly by
-            having the subscriber register itself)
-            </summary>
-        </member>
-        <member name="T:Rebus.Persistence.InMem.InMemoryTimeoutManager">
-            <summary>
-            Implementation of <see cref="T:Rebus.Timeouts.ITimeoutManager"/> that "persists" timeouts in memory.
-            </summary>
-        </member>
-        <member name="M:Rebus.Persistence.InMem.InMemoryTimeoutManager.Defer(System.DateTimeOffset,System.Collections.Generic.Dictionary{System.String,System.String},System.Byte[])">
-            <summary>
-            Stores the message with the given headers and body data, delaying it until the specified <paramref name="approximateDueTime"/>
-            </summary>
-        </member>
-        <member name="M:Rebus.Persistence.InMem.InMemoryTimeoutManager.GetDueMessages">
-            <summary>
-            Gets due messages as of now, given the approximate due time that they were stored with when <see cref="M:Rebus.Timeouts.ITimeoutManager.Defer(System.DateTimeOffset,System.Collections.Generic.Dictionary{System.String,System.String},System.Byte[])"/> was called
-            </summary>
-        </member>
-        <member name="T:Rebus.Persistence.InMem.InMemoryTimeoutManager.DeferredMessage">
-            <summary>
-            Represents a message whose delivery has been deferred into the future
-            </summary>
-        </member>
-        <member name="P:Rebus.Persistence.InMem.InMemoryTimeoutManager.DeferredMessage.DueTime">
-            <summary>
-            Gets the time of when delivery of this message is due
-            </summary>
-        </member>
-        <member name="P:Rebus.Persistence.InMem.InMemoryTimeoutManager.DeferredMessage.Headers">
-            <summary>
-            Gets the message's headers
-            </summary>
-        </member>
-        <member name="P:Rebus.Persistence.InMem.InMemoryTimeoutManager.DeferredMessage.Body">
-            <summary>
-            Gets the message's body
-            </summary>
-        </member>
-        <member name="M:Rebus.Persistence.InMem.InMemoryTimeoutManager.GetEnumerator">
-            <summary>
-            Gets an enumerator that allows for iterating through all stored deferred messages
             </summary>
         </member>
         <member name="T:Rebus.Pipeline.PipelineMessageContextExtensions">
@@ -2249,6 +2855,16 @@
         <member name="M:Rebus.Pipeline.Send.DestinationAddresses.GetEnumerator">
             <summary>
             Gets all the addresses that this <see cref="T:Rebus.Pipeline.Send.DestinationAddresses"/> object contains
+            </summary>
+        </member>
+        <member name="T:Rebus.Pipeline.Send.ValidateOutgoingMessageStep">
+            <summary>
+            Outgoing message step that checks the consistency of the message
+            </summary>
+        </member>
+        <member name="M:Rebus.Pipeline.Send.ValidateOutgoingMessageStep.Process(Rebus.Pipeline.OutgoingStepContext,System.Func{System.Threading.Tasks.Task})">
+            <summary>
+            Executes the step
             </summary>
         </member>
         <member name="T:Rebus.Pipeline.Send.FlowCorrelationIdStep">
@@ -2684,6 +3300,68 @@
             all endpoints need to be old Rebus endpoints or new Rebus endpoints with this feature enabled
             </summary>
         </member>
+        <member name="T:Rebus.Profiling.PipelineStepProfiler">
+            <summary>
+            Implementation of <see cref="T:Rebus.Pipeline.IPipeline"/> that wraps another <see cref="T:Rebus.Pipeline.IPipeline"/>
+            and injects instances of a single step into the pipeline which can be used to measure time spent
+            </summary>
+        </member>
+        <member name="M:Rebus.Profiling.PipelineStepProfiler.#ctor(Rebus.Pipeline.IPipeline,Rebus.Profiling.PipelineStepProfilerStats)">
+            <summary>
+            Creates the profiler
+            </summary>
+        </member>
+        <member name="M:Rebus.Profiling.PipelineStepProfiler.SendPipeline">
+            <summary>
+            Gets the original send pipeline
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Rebus.Profiling.PipelineStepProfiler.ReceivePipeline">
+            <summary>
+            Gets a pipeline with time-tracking steps interleaved
+            </summary>
+        </member>
+        <member name="T:Rebus.Profiling.PipelineStepProfilerStats">
+            <summary>
+            Stats collector
+            </summary>
+        </member>
+        <member name="M:Rebus.Profiling.PipelineStepProfilerStats.GetAndResetStats">
+            <summary>
+            Gets the current stats and resets the collector
+            </summary>
+        </member>
+        <member name="M:Rebus.Profiling.PipelineStepProfilerStats.GetStats">
+            <summary>
+            Gets the current stats
+            </summary>
+        </member>
+        <member name="T:Rebus.Profiling.PipelineStepProfilerStats.StepStat">
+            <summary>
+            Represents an aggregation of measurements
+            </summary>
+        </member>
+        <member name="P:Rebus.Profiling.PipelineStepProfilerStats.StepStat.StepType">
+            <summary>
+            Type of step for which this particular statistic was collected
+            </summary>
+        </member>
+        <member name="P:Rebus.Profiling.PipelineStepProfilerStats.StepStat.Elapsed">
+            <summary>
+            Time spent
+            </summary>
+        </member>
+        <member name="P:Rebus.Profiling.PipelineStepProfilerStats.StepStat.Percentage">
+            <summary>
+            Gets the percentage of time spent in this particular step
+            </summary>
+        </member>
+        <member name="M:Rebus.Profiling.PipelineStepProfilerStats.StepStat.ToString">
+            <summary>
+            Gets a string representation of this stat on the form "type: elapsed"
+            </summary>
+        </member>
         <member name="T:Rebus.Retry.ErrorTracking.InMemErrorTracker">
             <summary>
             Implementation of <see cref="T:Rebus.Retry.IErrorTracker"/> that tracks errors in an in-mem dictionary
@@ -2721,6 +3399,11 @@
             consisting of time and full exception details for all registered exceptions
             </summary>
         </member>
+        <member name="M:Rebus.Retry.ErrorTracking.InMemErrorTracker.GetExceptions(System.String)">
+            <summary>
+            Gets all caught exceptions for the message ID
+            </summary>
+        </member>
         <member name="M:Rebus.Retry.ErrorTracking.InMemErrorTracker.CleanUp(System.String)">
             <summary>
             Cleans up whichever tracking wr have done for the given <paramref name="messageId"/>
@@ -2729,6 +3412,16 @@
         <member name="M:Rebus.Retry.ErrorTracking.InMemErrorTracker.Dispose">
             <summary>
             Stops the periodic cleanup of tracked messages
+            </summary>
+        </member>
+        <member name="T:Rebus.Retry.IErrorHandler">
+            <summary>
+            Serivce that gets to handle failed messages
+            </summary>
+        </member>
+        <member name="M:Rebus.Retry.IErrorHandler.HandlePoisonMessage(Rebus.Messages.TransportMessage,Rebus.Transport.ITransactionContext,System.String)">
+            <summary>
+            Handles the poisonous message in the right way
             </summary>
         </member>
         <member name="T:Rebus.Retry.IErrorTracker">
@@ -2761,9 +3454,34 @@
             Should get a full, detailed error description for the message ID (i.e. could be timestamps and full stack traces for all failed deliveries)
             </summary>
         </member>
+        <member name="M:Rebus.Retry.IErrorTracker.GetExceptions(System.String)">
+            <summary>
+            Gets all caught exceptions for the message ID
+            </summary>
+        </member>
         <member name="T:Rebus.Retry.IRetryStrategyStep">
             <summary>
             Special marker for the retry strategy step
+            </summary>
+        </member>
+        <member name="T:Rebus.Retry.PoisonQueues.PoisonQueueErrorHandler">
+            <summary>
+            Default <see cref="T:Rebus.Retry.IErrorHandler"/> that uses a "poison queue" to function as storage for failed messages.
+            </summary>
+        </member>
+        <member name="M:Rebus.Retry.PoisonQueues.PoisonQueueErrorHandler.#ctor(Rebus.Retry.Simple.SimpleRetryStrategySettings,Rebus.Transport.ITransport,Rebus.Logging.IRebusLoggerFactory)">
+            <summary>
+            Creates the error handler
+            </summary>
+        </member>
+        <member name="M:Rebus.Retry.PoisonQueues.PoisonQueueErrorHandler.Initialize">
+            <summary>
+            Initializes the poison queue error handler by creating the error queue if necessary
+            </summary>
+        </member>
+        <member name="M:Rebus.Retry.PoisonQueues.PoisonQueueErrorHandler.HandlePoisonMessage(Rebus.Messages.TransportMessage,Rebus.Transport.ITransactionContext,System.String)">
+            <summary>
+            Handles the poisonous message by forwarding it to the configured error queue
             </summary>
         </member>
         <member name="T:Rebus.Retry.Simple.FailedMessageWrapper`1">
@@ -2781,12 +3499,17 @@
             Gets a (sometimes pretty long) description of the encountered error(s)
             </summary>
         </member>
+        <member name="P:Rebus.Retry.Simple.FailedMessageWrapper`1.Exceptions">
+            <summary>
+            Gets all exceptions that were caught leading to this <see cref="T:Rebus.Retry.Simple.IFailed`1"/>
+            </summary>
+        </member>
         <member name="P:Rebus.Retry.Simple.FailedMessageWrapper`1.Headers">
             <summary>
             Gets the headers of the message that failed
             </summary>
         </member>
-        <member name="M:Rebus.Retry.Simple.FailedMessageWrapper`1.#ctor(System.Collections.Generic.Dictionary{System.String,System.String},`0,System.String)">
+        <member name="M:Rebus.Retry.Simple.FailedMessageWrapper`1.#ctor(System.Collections.Generic.Dictionary{System.String,System.String},`0,System.String,System.Collections.Generic.IEnumerable{System.Exception})">
             <summary>
             Constructs the wrapper with the given message
             </summary>
@@ -2814,6 +3537,11 @@
         <member name="P:Rebus.Retry.Simple.IFailed`1.Headers">
             <summary>
             Gets the headers of the message that failed
+            </summary>
+        </member>
+        <member name="P:Rebus.Retry.Simple.IFailed`1.Exceptions">
+            <summary>
+            Gets all exceptions that were caught leading to this failed message
             </summary>
         </member>
         <member name="T:Rebus.Retry.Simple.SimpleRetryStrategyConfigurationExtensions">
@@ -2867,7 +3595,7 @@
             Implementation of <see cref="T:Rebus.Retry.IRetryStrategy"/> that tracks errors in memory
             </summary>
         </member>
-        <member name="M:Rebus.Retry.Simple.SimpleRetryStrategy.#ctor(Rebus.Transport.ITransport,Rebus.Retry.Simple.SimpleRetryStrategySettings,Rebus.Retry.IErrorTracker,Rebus.Logging.IRebusLoggerFactory)">
+        <member name="M:Rebus.Retry.Simple.SimpleRetryStrategy.#ctor(Rebus.Retry.Simple.SimpleRetryStrategySettings,Rebus.Retry.IErrorTracker,Rebus.Retry.IErrorHandler)">
             <summary>
             Constructs the retry strategy with the given settings, creating an error queue with the configured name if necessary
             </summary>
@@ -2889,7 +3617,7 @@
             Key of a step context item that indicates that the message must be wrapped in a <see cref="T:Rebus.Retry.Simple.FailedMessageWrapper`1"/> after being deserialized
             </summary>
         </member>
-        <member name="M:Rebus.Retry.Simple.SimpleRetryStrategyStep.#ctor(Rebus.Transport.ITransport,Rebus.Retry.Simple.SimpleRetryStrategySettings,Rebus.Retry.IErrorTracker,Rebus.Logging.IRebusLoggerFactory)">
+        <member name="M:Rebus.Retry.Simple.SimpleRetryStrategyStep.#ctor(Rebus.Retry.Simple.SimpleRetryStrategySettings,Rebus.Retry.IErrorTracker,Rebus.Retry.IErrorHandler)">
             <summary>
             Constructs the step, using the given transport and settings
             </summary>
@@ -2992,7 +3720,7 @@
         </member>
         <member name="M:Rebus.Routing.TopicBased.TopicBasedRouterConfigurationExtensions.TopicBased(Rebus.Config.StandardConfigurer{Rebus.Routing.IRouter})">
             <summary>
-            Selectes topic-based routing
+            Selects topic-based routing. This simple type of routing can ONLY be used for PUB/SUB and it will go away soon
             </summary>
         </member>
         <member name="T:Rebus.Routing.TopicBased.TopicBasedRouterConfigurationExtensions.TopicBasedRouterConfigurationBuilder">
@@ -3033,6 +3761,11 @@
         <member name="M:Rebus.Routing.TypeBased.TypeBasedRouter.Map``1(System.String)">
             <summary>
             Maps <paramref name="destinationAddress"/> as the owner of the <typeparamref name="TMessage"/> message type
+            </summary>
+        </member>
+        <member name="M:Rebus.Routing.TypeBased.TypeBasedRouter.MapFallback(System.String)">
+            <summary>
+            Configures <paramref name="destinationAddress"/> as a fallback which will be returned when trying to get a destination for an unmapped type
             </summary>
         </member>
         <member name="M:Rebus.Routing.TypeBased.TypeBasedRouter.Map(System.Type,System.String)">
@@ -3084,6 +3817,11 @@
         <member name="M:Rebus.Routing.TypeBased.TypeBasedRouterConfigurationExtensions.TypeBasedRouterConfigurationBuilder.MapAssemblyOf``1(System.String)">
             <summary>
             Maps <paramref name="destinationAddress"/> as the owner of all message types found in the same assembly as <typeparamref name="TMessage"/>
+            </summary>
+        </member>
+        <member name="M:Rebus.Routing.TypeBased.TypeBasedRouterConfigurationExtensions.TypeBasedRouterConfigurationBuilder.MapFallback(System.String)">
+            <summary>
+            Maps <paramref name="destinationAddress"/> as a fallback destination to use when none of the configured mappings match
             </summary>
         </member>
         <member name="T:Rebus.Routing.IRouter">
@@ -3544,6 +4282,23 @@
             Deserializes the given byte[] into an object
             </summary>
         </member>
+        <member name="T:Rebus.Serialization.GenericJsonSerializer">
+            <summary>
+            Generic serializer that serializes an object into a string and vice versa. Uses a normal, compact JSON format,
+            requiring the serialized type to be known at deserialization time
+            </summary>
+        </member>
+        <member name="M:Rebus.Serialization.GenericJsonSerializer.Serialize``1(``0)">
+            <summary>
+            Serializes the given object to a string. No type information is included - therefore, abstract members etc.
+            cannot be reproduced when deserializing
+            </summary>
+        </member>
+        <member name="M:Rebus.Serialization.GenericJsonSerializer.Deserialize``1(System.String)">
+            <summary>
+            Deserializes the given JSON string to the type specified
+            </summary>
+        </member>
         <member name="T:Rebus.Serialization.ISerializer">
             <summary>
             Message serializer that should capable of safely roundtripping .NET message body objects to some serialized form and back
@@ -3783,6 +4538,11 @@
             Adds a callback to be invoked when new events are recorded in the fake bus
             </summary>
         </member>
+        <member name="M:Rebus.Testing.FakeBus.Clear">
+            <summary>
+            Clears all events recorded by the fake bus. Registered callbacks will NOT be cleared
+            </summary>
+        </member>
         <member name="M:Rebus.Testing.FakeBus.SendLocal(System.Object,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             Sends the specified message to our own input queue address
@@ -3980,6 +4740,18 @@
             Delivers the given message to the saga handler
             </summary>
         </member>
+        <member name="M:Rebus.Testing.SagaFixture`1.Add(Rebus.Sagas.ISagaData)">
+            <summary>
+            Adds the given saga data to the available saga data in the saga fixture. If the saga data is not provided
+            with an ID, a new guid will automatically be assigned internally.
+            </summary>
+        </member>
+        <member name="M:Rebus.Testing.SagaFixture`1.AddRange(System.Collections.Generic.IEnumerable{Rebus.Sagas.ISagaData})">
+            <summary>
+            Adds the given saga data instances to the available saga data in the fixture. If the saga data instances have not been provided
+            with an ID, a new guid will automatically be assigned internally.
+            </summary>
+        </member>
         <member name="M:Rebus.Testing.SagaFixture`1.Dispose">
             <summary>
             Shuts down the in-mem bus that holds the saga handler
@@ -3997,7 +4769,7 @@
             to be performed
             </summary>
         </member>
-        <member name="M:Rebus.Threading.AsyncBottleneck.Enter">
+        <member name="M:Rebus.Threading.AsyncBottleneck.Enter(System.Threading.CancellationToken)">
             <summary>
             Grabs the semaphore and releases an <see cref="T:System.IDisposable"/> that will release it again when disposed
             </summary>
@@ -4096,7 +4868,8 @@
         </member>
         <member name="T:Rebus.Threading.IAsyncTask">
             <summary>
-            
+            A task that will be executed periodically. Starts executing as soon as <see cref="M:Rebus.Threading.IAsyncTask.Start"/>
+            is called, beginning with waiting the full interval before the first execution. Stops running when it is disposed.
             </summary>
         </member>
         <member name="M:Rebus.Threading.IAsyncTask.Start">
@@ -4203,7 +4976,7 @@
             way that can perform an arbitrary action in order to mark the due message as successfully delivered.
             </summary>
         </member>
-        <member name="M:Rebus.Timeouts.DueMessage.#ctor(System.Collections.Generic.Dictionary{System.String,System.String},System.Byte[],System.Action)">
+        <member name="M:Rebus.Timeouts.DueMessage.#ctor(System.Collections.Generic.Dictionary{System.String,System.String},System.Byte[],System.Func{System.Threading.Tasks.Task})">
             <summary>
             Constructs the due message with the given headers and body, storing the given <paramref name="completeAction"/> to be
             executed when the message's <see cref="M:Rebus.Timeouts.DueMessage.MarkAsCompleted"/> method is called.
@@ -4235,14 +5008,19 @@
             where each due message can be individually marked as successfully delivered 
             </summary>
         </member>
-        <member name="M:Rebus.Timeouts.DueMessagesResult.#ctor(System.Collections.Generic.IEnumerable{Rebus.Timeouts.DueMessage},System.Action)">
+        <member name="M:Rebus.Timeouts.DueMessagesResult.#ctor(System.Collections.Generic.IEnumerable{Rebus.Timeouts.DueMessage},System.Func{System.Threading.Tasks.Task})">
             <summary>
             Constructs the result, wrapping the given list of due messages, performing the given action when the instance is disposed
             </summary>
         </member>
-        <member name="P:Rebus.Timeouts.DueMessagesResult.Empty">
+        <member name="F:Rebus.Timeouts.DueMessagesResult.Empty">
             <summary>
             Gets an empty due messages result
+            </summary>
+        </member>
+        <member name="M:Rebus.Timeouts.DueMessagesResult.Complete">
+            <summary>
+            Completes the result by running the clean-up action
             </summary>
         </member>
         <member name="M:Rebus.Timeouts.DueMessagesResult.Dispose">
@@ -4253,6 +5031,16 @@
         <member name="M:Rebus.Timeouts.DueMessagesResult.GetEnumerator">
             <summary>
             Returns all due messages from this result
+            </summary>
+        </member>
+        <member name="T:Rebus.Timeouts.TimeoutsConfigurationExtensions">
+            <summary>
+            Configuration extensions for timeouts
+            </summary>
+        </member>
+        <member name="M:Rebus.Timeouts.TimeoutsConfigurationExtensions.UseExternalTimeoutManager(Rebus.Config.StandardConfigurer{Rebus.Timeouts.ITimeoutManager},System.String)">
+            <summary>
+            Configures Rebus to use another endpoint as the timeout manager
             </summary>
         </member>
         <member name="T:Rebus.Timeouts.ITimeoutManager">
@@ -4332,7 +5120,7 @@
             the commit phase of the queue transaction unless we're non-transactional, in which case it is written immediately.
             </summary>
         </member>
-        <member name="M:Rebus.Transport.FileSystem.FileSystemTransport.Receive(Rebus.Transport.ITransactionContext)">
+        <member name="M:Rebus.Transport.FileSystem.FileSystemTransport.Receive(Rebus.Transport.ITransactionContext,System.Threading.CancellationToken)">
             <summary>
             Receives the next message from the logical input queue by loading the next file from the corresponding directory,
             deserializing it, deleting it when the transaction is committed.
@@ -4365,6 +5153,149 @@
             <summary>
             Configures Rebus to use the file system to transport messages, as a one-way client. The specified <paramref name="baseDirectory"/> will be used as the base directory
             within which subdirectories will be created for each logical queue.
+            </summary>
+        </member>
+        <member name="T:Rebus.Transport.Msmq.MsmqTransportConfigurationBuilder">
+            <summary>
+            MSMQ configuration builder that can be used to customize how certain MSMQ operations are performed
+            </summary>
+        </member>
+        <member name="M:Rebus.Transport.Msmq.MsmqTransportConfigurationBuilder.OnCreated(System.Action{System.Messaging.MessageQueue})">
+            <summary>
+            Adds a callback to be invoked when a new queue is created. Callbacks will be called AFTER the default permissions
+            have been applied, which means that it is possible to e.g. remove the Administrators group's <see cref="F:System.Messaging.MessageQueueAccessRights.FullControl"/> 
+            permission again in order to avoid this particular default
+            </summary>
+        </member>
+        <member name="T:Rebus.Transport.Msmq.MsmqTransportConfigurationExtensions">
+            <summary>
+            Configuration extensions for the MSMQ transport
+            </summary>
+        </member>
+        <member name="M:Rebus.Transport.Msmq.MsmqTransportConfigurationExtensions.UseMsmq(Rebus.Config.StandardConfigurer{Rebus.Transport.ITransport},System.String)">
+            <summary>
+            Configures Rebus to use MSMQ to transport messages, receiving messages from the specified <paramref name="inputQueueName"/>
+            </summary>
+        </member>
+        <member name="M:Rebus.Transport.Msmq.MsmqTransportConfigurationExtensions.UseMsmqAsOneWayClient(Rebus.Config.StandardConfigurer{Rebus.Transport.ITransport})">
+            <summary>
+            Configures Rebus to use MSMQ to transport messages as a one-way client (i.e. will not be able to receive any messages)
+            </summary>
+        </member>
+        <member name="T:Rebus.Transport.Msmq.MsmqTransport">
+            <summary>
+            Implementation of <see cref="T:Rebus.Transport.ITransport"/> that uses MSMQ to do its thing
+            </summary>
+        </member>
+        <member name="M:Rebus.Transport.Msmq.MsmqTransport.#ctor(System.String,Rebus.Logging.IRebusLoggerFactory)">
+            <summary>
+            Constructs the transport with the specified input queue address
+            </summary>
+        </member>
+        <member name="M:Rebus.Transport.Msmq.MsmqTransport.AddQueueCallback(System.Action{System.Messaging.MessageQueue})">
+            <summary>
+            Adds a callback to be invoked when a new queue is created. Can be used e.g. to customize permissions
+            </summary>
+        </member>
+        <member name="M:Rebus.Transport.Msmq.MsmqTransport.Initialize">
+            <summary>
+            Initializes the transport by creating the input queue
+            </summary>
+        </member>
+        <member name="M:Rebus.Transport.Msmq.MsmqTransport.CreateQueue(System.String)">
+            <summary>
+            Creates a queue with the given address, unless the address is of a remote queue - in that case,
+            this call is ignored
+            </summary>
+        </member>
+        <member name="M:Rebus.Transport.Msmq.MsmqTransport.PurgeInputQueue">
+            <summary>
+            Deletes all messages in the input queue
+            </summary>
+        </member>
+        <member name="M:Rebus.Transport.Msmq.MsmqTransport.Send(System.String,Rebus.Messages.TransportMessage,Rebus.Transport.ITransactionContext)">
+            <summary>
+            Sends the given transport message to the specified destination address using MSMQ. Will use the existing <see cref="T:System.Messaging.MessageQueueTransaction"/> stashed
+            under the <see cref="F:Rebus.Transport.Msmq.MsmqTransport.CurrentTransactionKey"/> key in the given <paramref name="context"/>, or else it will create one and add it.
+            </summary>
+        </member>
+        <member name="M:Rebus.Transport.Msmq.MsmqTransport.Receive(Rebus.Transport.ITransactionContext,System.Threading.CancellationToken)">
+            <summary>
+            Received the next available transport message from the input queue via MSMQ. Will create a new <see cref="T:System.Messaging.MessageQueueTransaction"/> and stash
+            it under the <see cref="F:Rebus.Transport.Msmq.MsmqTransport.CurrentTransactionKey"/> key in the given <paramref name="context"/>. If one already exists, an exception will be thrown
+            (because we should never have to receive multiple messages in the same transaction)
+            </summary>
+        </member>
+        <member name="P:Rebus.Transport.Msmq.MsmqTransport.Address">
+            <summary>
+            Gets the input queue address of this MSMQ queue
+            </summary>
+        </member>
+        <member name="M:Rebus.Transport.Msmq.MsmqTransport.Dispose">
+            <summary>
+            Disposes the input message queue object
+            </summary>
+        </member>
+        <member name="M:Rebus.Transport.Msmq.MsmqTransport.UseLegacyHeaderSerialization">
+            <summary>
+            Configures the transport to serialize headers in "legacy mode", which means that they're UTF7-encoded and not UTF8
+            </summary>
+        </member>
+        <member name="T:Rebus.Transport.Msmq.MsmqUtil">
+            <summary>
+            Utils class for various MSMQ operations
+            </summary>
+        </member>
+        <member name="M:Rebus.Transport.Msmq.MsmqUtil.PurgeQueue(System.String)">
+            <summary>
+            Deletes all messages from the queue with the specified name
+            </summary>
+            <param name="queueName"></param>
+        </member>
+        <member name="M:Rebus.Transport.Msmq.MsmqUtil.GetPath(System.String)">
+            <summary>
+            Gets the MSMQ style path for the queue with the given name
+            </summary>
+        </member>
+        <member name="M:Rebus.Transport.Msmq.MsmqUtil.GetFullPath(System.String)">
+            <summary>
+            Gets the MSMQ style path for the queue with the given name, always machine-qualified, even when the queue is local
+            </summary>
+        </member>
+        <member name="M:Rebus.Transport.Msmq.MsmqUtil.GenerateFullPath(System.String,System.String)">
+            <summary>
+            Generates from the given <paramref name="machineName"/> and <paramref name="queueName"/> the full, MSMQ style queue path.
+            It goes something like this: <code>FormatName:DIRECT=OS:SOME_MACHINE\private$\SOME_QUEUE</code> when addressing
+            by machine name, and like this <code>FormatName:DIRECT=TCP:10.10.1.1\private$\SOME_QUEUE</code> when addressing
+            by IP address.
+            </summary>
+        </member>
+        <member name="M:Rebus.Transport.Msmq.MsmqUtil.QueueExists(System.String)">
+            <summary>
+            Returns whether an MSMQ queue with the given name exists
+            </summary>
+        </member>
+        <member name="M:Rebus.Transport.Msmq.MsmqUtil.Delete(System.String)">
+            <summary>
+            Deletes the MSMQ queue with the given name
+            </summary>
+        </member>
+        <member name="M:Rebus.Transport.Msmq.MsmqUtil.EnsureQueueExists(System.String,Rebus.Logging.ILog,System.Action{System.Messaging.MessageQueue})">
+            <summary>
+            Creates the MSMQ queue with the specified path if it does not already exist. If it is created, the user account
+            of the currently executing process will get <see cref="F:System.Messaging.MessageQueueAccessRights.GenericWrite"/> permissions to it,
+            and the local administrators group will get <see cref="F:System.Messaging.MessageQueueAccessRights.FullControl"/>.
+            </summary>
+        </member>
+        <member name="M:Rebus.Transport.Msmq.MsmqUtil.EnsureMessageQueueIsTransactional(System.String)">
+            <summary>
+            Verifies that the queue with the given <paramref name="path"/> is transaction. If that is not the case, a <see cref="T:Rebus.Exceptions.RebusApplicationException"/>
+            is thrown with an explanation of the problem
+            </summary>
+        </member>
+        <member name="M:Rebus.Transport.Msmq.MsmqUtil.IsLocal(System.String)">
+            <summary>
+            Returns whther the queue with the specified name is local
             </summary>
         </member>
         <member name="T:Rebus.Transport.SqlServer.SqlServerTransport">
@@ -4418,7 +5349,7 @@
             Sends the given transport message to the specified logical destination address by adding it to the messages table.
             </summary>
         </member>
-        <member name="M:Rebus.Transport.SqlServer.SqlServerTransport.Receive(Rebus.Transport.ITransactionContext)">
+        <member name="M:Rebus.Transport.SqlServer.SqlServerTransport.Receive(Rebus.Transport.ITransactionContext,System.Threading.CancellationToken)">
             <summary>
             Receives the next message by querying the messages table for a message with a recipient matching this transport's <see cref="P:Rebus.Transport.SqlServer.SqlServerTransport.Address"/>
             </summary>
@@ -4433,10 +5364,24 @@
             Configuration extensions for the SQL transport
             </summary>
         </member>
+        <member name="M:Rebus.Transport.SqlServer.SqlServerTransportConfigurationExtensions.UseSqlServerAsOneWayClient(Rebus.Config.StandardConfigurer{Rebus.Transport.ITransport},System.Func{System.Threading.Tasks.Task{Rebus.Persistence.SqlServer.IDbConnection}},System.String)">
+            <summary>
+            Configures Rebus to use SQL Server to transport messages as a one-way client (i.e. will not be able to receive any messages).
+            The table specified by <paramref name="tableName"/> will be used to store messages.
+            The message table will automatically be created if it does not exist.
+            </summary>
+        </member>
         <member name="M:Rebus.Transport.SqlServer.SqlServerTransportConfigurationExtensions.UseSqlServerAsOneWayClient(Rebus.Config.StandardConfigurer{Rebus.Transport.ITransport},System.String,System.String)">
             <summary>
             Configures Rebus to use SQL Server to transport messages as a one-way client (i.e. will not be able to receive any messages).
             The table specified by <paramref name="tableName"/> will be used to store messages.
+            The message table will automatically be created if it does not exist.
+            </summary>
+        </member>
+        <member name="M:Rebus.Transport.SqlServer.SqlServerTransportConfigurationExtensions.UseSqlServer(Rebus.Config.StandardConfigurer{Rebus.Transport.ITransport},System.Func{System.Threading.Tasks.Task{Rebus.Persistence.SqlServer.IDbConnection}},System.String,System.String)">
+            <summary>
+            Configures Rebus to use SQL Server as its transport. The table specified by <paramref name="tableName"/> will be used to
+            store messages, and the "queue" specified by <paramref name="inputQueueName"/> will be used when querying for messages.
             The message table will automatically be created if it does not exist.
             </summary>
         </member>
@@ -4531,7 +5476,7 @@
             Delivers the given message to the queue identitied by the given <paramref name="destinationAddress"/>
             </summary>
         </member>
-        <member name="M:Rebus.Transport.InMem.InMemTransport.Receive(Rebus.Transport.ITransactionContext)">
+        <member name="M:Rebus.Transport.InMem.InMemTransport.Receive(Rebus.Transport.ITransactionContext,System.Threading.CancellationToken)">
             <summary>
             Receives the next message from the queue identified by the configured <see cref="P:Rebus.Transport.InMem.InMemTransport.Address"/>, returning null if none was available
             </summary>
@@ -4601,142 +5546,6 @@
             Returns a new <see cref="T:Rebus.Transport.InMem.InMemTransportMessage"/> containing the headers and the body data of the <see cref="T:Rebus.Messages.TransportMessage"/>
             </summary>
         </member>
-        <member name="T:Rebus.Transport.Msmq.MsmqTransportConfigurationExtensions">
-            <summary>
-            Configuration extensions for the MSMQ transport
-            </summary>
-        </member>
-        <member name="M:Rebus.Transport.Msmq.MsmqTransportConfigurationExtensions.UseMsmq(Rebus.Config.StandardConfigurer{Rebus.Transport.ITransport},System.String)">
-            <summary>
-            Configures Rebus to use MSMQ to transport messages, receiving messages from the specified <paramref name="inputQueueName"/>
-            </summary>
-        </member>
-        <member name="M:Rebus.Transport.Msmq.MsmqTransportConfigurationExtensions.UseMsmqAsOneWayClient(Rebus.Config.StandardConfigurer{Rebus.Transport.ITransport})">
-            <summary>
-            Configures Rebus to use MSMQ to transport messages as a one-way client (i.e. will not be able to receive any messages)
-            </summary>
-        </member>
-        <member name="T:Rebus.Transport.Msmq.MsmqTransport">
-            <summary>
-            Implementation of <see cref="T:Rebus.Transport.ITransport"/> that uses MSMQ to do its thing
-            </summary>
-        </member>
-        <member name="M:Rebus.Transport.Msmq.MsmqTransport.#ctor(System.String,Rebus.Logging.IRebusLoggerFactory)">
-            <summary>
-            Constructs the transport with the specified input queue address
-            </summary>
-        </member>
-        <member name="M:Rebus.Transport.Msmq.MsmqTransport.Finalize">
-            <summary>
-            Last-resort disposal of the transport's message queues
-            </summary>
-        </member>
-        <member name="M:Rebus.Transport.Msmq.MsmqTransport.Initialize">
-            <summary>
-            Initializes the transport by creating the input queue
-            </summary>
-        </member>
-        <member name="M:Rebus.Transport.Msmq.MsmqTransport.CreateQueue(System.String)">
-            <summary>
-            Creates a queue with the given address, unless the address is of a remote queue - in that case,
-            this call is ignored
-            </summary>
-        </member>
-        <member name="M:Rebus.Transport.Msmq.MsmqTransport.PurgeInputQueue">
-            <summary>
-            Deletes all messages in the input queue
-            </summary>
-        </member>
-        <member name="M:Rebus.Transport.Msmq.MsmqTransport.Send(System.String,Rebus.Messages.TransportMessage,Rebus.Transport.ITransactionContext)">
-            <summary>
-            Sends the given transport message to the specified destination address using MSMQ. Will use the existing <see cref="T:System.Messaging.MessageQueueTransaction"/> stashed
-            under the <see cref="F:Rebus.Transport.Msmq.MsmqTransport.CurrentTransactionKey"/> key in the given <paramref name="context"/>, or else it will create one and add it.
-            </summary>
-        </member>
-        <member name="M:Rebus.Transport.Msmq.MsmqTransport.Receive(Rebus.Transport.ITransactionContext)">
-            <summary>
-            Received the next available transport message from the input queue via MSMQ. Will create a new <see cref="T:System.Messaging.MessageQueueTransaction"/> and stash
-            it under the <see cref="F:Rebus.Transport.Msmq.MsmqTransport.CurrentTransactionKey"/> key in the given <paramref name="context"/>. If one already exists, an exception will be thrown
-            (because we should never have to receive multiple messages in the same transaction)
-            </summary>
-        </member>
-        <member name="P:Rebus.Transport.Msmq.MsmqTransport.Address">
-            <summary>
-            Gets the input queue address of this MSMQ queue
-            </summary>
-        </member>
-        <member name="M:Rebus.Transport.Msmq.MsmqTransport.Dispose">
-            <summary>
-            Disposes the input message queue object
-            </summary>
-        </member>
-        <member name="M:Rebus.Transport.Msmq.MsmqTransport.Dispose(System.Boolean)">
-            <summary>
-            Disposes the input queue instance
-            </summary>
-        </member>
-        <member name="M:Rebus.Transport.Msmq.MsmqTransport.UseLegacyHeaderSerialization">
-            <summary>
-            Configures the transport to serialize headers in "legacy mode", which means that they're UTF7-encoded and not UTF8
-            </summary>
-        </member>
-        <member name="T:Rebus.Transport.Msmq.MsmqUtil">
-            <summary>
-            Utils class for various MSMQ operations
-            </summary>
-        </member>
-        <member name="M:Rebus.Transport.Msmq.MsmqUtil.PurgeQueue(System.String)">
-            <summary>
-            Deletes all messages from the queue with the specified name
-            </summary>
-            <param name="queueName"></param>
-        </member>
-        <member name="M:Rebus.Transport.Msmq.MsmqUtil.GetPath(System.String)">
-            <summary>
-            Gets the MSMQ style path for the queue with the given name
-            </summary>
-        </member>
-        <member name="M:Rebus.Transport.Msmq.MsmqUtil.GetFullPath(System.String)">
-            <summary>
-            Gets the MSMQ style path for the queue with the given name, always machine-qualified, even when the queue is local
-            </summary>
-        </member>
-        <member name="M:Rebus.Transport.Msmq.MsmqUtil.GenerateFullPath(System.String,System.String)">
-            <summary>
-            Generates from the given <paramref name="machineName"/> and <paramref name="queueName"/> the full, MSMQ style queue path.
-            It goes something like this: <code>FormatName:DIRECT=OS:SOME_MACHINE\private$\SOME_QUEUE</code> when addressing
-            by machine name, and like this <code>FormatName:DIRECT=TCP:10.10.1.1\private$\SOME_QUEUE</code> when addressing
-            by IP address.
-            </summary>
-        </member>
-        <member name="M:Rebus.Transport.Msmq.MsmqUtil.QueueExists(System.String)">
-            <summary>
-            Returns whether an MSMQ queue with the given name exists
-            </summary>
-        </member>
-        <member name="M:Rebus.Transport.Msmq.MsmqUtil.Delete(System.String)">
-            <summary>
-            Deletes the MSMQ queue with the given name
-            </summary>
-        </member>
-        <member name="M:Rebus.Transport.Msmq.MsmqUtil.EnsureQueueExists(System.String,Rebus.Logging.ILog)">
-            <summary>
-            Creates the MSMQ queue with the specified path if it does not already exist. If it is created, the user account
-            of the currently executing process will get <see cref="F:System.Messaging.MessageQueueAccessRights.GenericWrite"/> permissions to it,
-            and the local administrators group will get <see cref="F:System.Messaging.MessageQueueAccessRights.FullControl"/>.
-            </summary>
-        </member>
-        <member name="M:Rebus.Transport.Msmq.MsmqUtil.EnsureMessageQueueIsTransactional(System.String)">
-            <summary>
-            Verifies that the queue with the given <paramref name="path"/> is transaction. If that is not the case, a <see cref="T:Rebus.Exceptions.RebusApplicationException"/>
-            is thrown with an explanation of the problem
-            </summary>
-        </member>
-        <member name="M:Rebus.Transport.Msmq.MsmqUtil.IsLocal(System.String)">
-            <summary>
-            Returns whther the queue with the specified name is local
-            </summary>
-        </member>
         <member name="T:Rebus.Transport.ITransport">
             <summary>
             The transport is responsible for sending and receiving messages
@@ -4752,7 +5561,7 @@
             Sends the given <see cref="T:Rebus.Messages.TransportMessage"/> to the queue with the specified globally addressable name
             </summary>
         </member>
-        <member name="M:Rebus.Transport.ITransport.Receive(Rebus.Transport.ITransactionContext)">
+        <member name="M:Rebus.Transport.ITransport.Receive(Rebus.Transport.ITransactionContext,System.Threading.CancellationToken)">
             <summary>
             Receives the next message (if any) from the transport's input queue <see cref="P:Rebus.Transport.ITransport.Address"/>
             </summary>
@@ -4765,11 +5574,6 @@
         <member name="T:Rebus.Transport.DefaultTransactionContext">
             <summary>
             Default implementation of <see cref="T:Rebus.Transport.ITransactionContext"/>
-            </summary>
-        </member>
-        <member name="M:Rebus.Transport.DefaultTransactionContext.#ctor">
-            <summary>
-            Constructs the transaction context
             </summary>
         </member>
         <member name="P:Rebus.Transport.DefaultTransactionContext.Items">
@@ -4865,6 +5669,28 @@
             Executes commit actions enlisted in the transaction with <see cref="M:Rebus.Transport.ITransactionContext.OnCommitted(System.Func{System.Threading.Tasks.Task})"/>
             </summary>
         </member>
+        <member name="T:Rebus.Workers.ISyncBackoffStrategy">
+            <summary>
+            Implements a strategy with which workers will back off in idle periods. Please note that the <see cref="T:Rebus.Workers.ISyncBackoffStrategy"/>
+            implementations must be reentrant!
+            </summary>
+        </member>
+        <member name="M:Rebus.Workers.ISyncBackoffStrategy.Wait">
+            <summary>
+            Executes the next wait operation by blocking the thread, possibly advancing the wait cursor to a different wait time for the next time.
+            This function is called each time no message was received.
+            </summary>
+        </member>
+        <member name="M:Rebus.Workers.ISyncBackoffStrategy.WaitError">
+            <summary>
+            Blocks the thread for a (most likely longer) while, when an error has occurred
+            </summary>
+        </member>
+        <member name="M:Rebus.Workers.ISyncBackoffStrategy.Reset">
+            <summary>
+            Resets the strategy. Is called whenever a message was received.
+            </summary>
+        </member>
         <member name="T:Rebus.Workers.IWorker">
             <summary>
             Represents a worker, which is a thing that is capable of doing work. It may correspond to a worker thread
@@ -4891,6 +5717,11 @@
             <summary>
             Asynchronously executes the next wait operation, possibly advancing the wait cursor to a different wait time for the next time.
             This function is called each time no message was received.
+            </summary>
+        </member>
+        <member name="M:Rebus.Workers.IBackoffStrategy.WaitError">
+            <summary>
+            Asynchronously waits a while when an error has occurred
             </summary>
         </member>
         <member name="M:Rebus.Workers.IBackoffStrategy.Reset">
@@ -4942,7 +5773,7 @@
             all the work (which consists of receiving new messages and running continuations)
             </summary>
         </member>
-        <member name="M:Rebus.Workers.ThreadBased.ThreadWorkerFactory.#ctor(Rebus.Transport.ITransport,Rebus.Pipeline.IPipeline,Rebus.Pipeline.IPipelineInvoker,System.Int32,Rebus.Workers.IBackoffStrategy,Rebus.Logging.IRebusLoggerFactory)">
+        <member name="M:Rebus.Workers.ThreadBased.ThreadWorkerFactory.#ctor(Rebus.Transport.ITransport,Rebus.Pipeline.IPipeline,Rebus.Pipeline.IPipelineInvoker,Rebus.Workers.IBackoffStrategy,Rebus.Logging.IRebusLoggerFactory,Rebus.Config.Options,System.Func{Rebus.Bus.RebusBus})">
             <summary>
             Constructs the worker factory
             </summary>
@@ -4960,6 +5791,58 @@
         <member name="M:Rebus.Workers.IWorkerFactory.CreateWorker(System.String)">
             <summary>
             Must create a new worker with the given name
+            </summary>
+        </member>
+        <member name="M:Rebus.Workers.ThreadPoolBased.DefaultSyncBackoffStrategy.#ctor(System.Collections.Generic.IEnumerable{System.TimeSpan})">
+            <summary>
+            Constructs the backoff strategy with the given waiting times
+            </summary>
+        </member>
+        <member name="M:Rebus.Workers.ThreadPoolBased.DefaultSyncBackoffStrategy.Wait">
+            <summary>
+            Executes the next wait operation by blocking the thread, possibly advancing the wait cursor to a different wait time for the next time.
+            This function is called each time no message was received.
+            </summary>
+        </member>
+        <member name="M:Rebus.Workers.ThreadPoolBased.DefaultSyncBackoffStrategy.WaitError">
+            <summary>
+            Blocks the thread for a (most likely longer) while, when an error has occurred
+            </summary>
+        </member>
+        <member name="M:Rebus.Workers.ThreadPoolBased.DefaultSyncBackoffStrategy.Reset">
+            <summary>
+            Resets the strategy. Is called whenever a message was received.
+            </summary>
+        </member>
+        <member name="T:Rebus.Workers.ThreadPoolBased.DedicatedRebusWorkersConfigurationExtensions">
+            <summary>
+            Configuration extensions for classic dedicated Rebus worker factory
+            </summary>
+        </member>
+        <member name="M:Rebus.Workers.ThreadPoolBased.DedicatedRebusWorkersConfigurationExtensions.UseClassicRebusWorkersMessageDispatch(Rebus.Config.OptionsConfigurer)">
+            <summary>
+            Replaces the default thread pool-based worker factory with one that uses dedicate Rebus workers for everything (including running continuations)
+            </summary>
+        </member>
+        <member name="T:Rebus.Workers.ThreadPoolBased.ThreadPoolWorkerFactory">
+            <summary>
+            Implementation of <see cref="T:Rebus.Workers.IWorkerFactory"/> that uses worker threads to do synchronous receive of messages, dispatching
+            received messages to the threadpool.
+            </summary>
+        </member>
+        <member name="M:Rebus.Workers.ThreadPoolBased.ThreadPoolWorkerFactory.#ctor(Rebus.Transport.ITransport,Rebus.Logging.IRebusLoggerFactory,Rebus.Pipeline.IPipeline,Rebus.Pipeline.IPipelineInvoker,Rebus.Config.Options,System.Func{Rebus.Bus.RebusBus},Rebus.Bus.BusLifetimeEvents,Rebus.Workers.ISyncBackoffStrategy)">
+            <summary>
+            Creates the worker factory
+            </summary>
+        </member>
+        <member name="M:Rebus.Workers.ThreadPoolBased.ThreadPoolWorkerFactory.CreateWorker(System.String)">
+            <summary>
+            Creates a new worker with the given <paramref name="workerName"/>
+            </summary>
+        </member>
+        <member name="M:Rebus.Workers.ThreadPoolBased.ThreadPoolWorkerFactory.WaitForContinuationsToFinish">
+            <summary>
+            Blocks until all work has finished being done (i.e. waits for all message handling continuations to have been executed)
             </summary>
         </member>
         <member name="T:Rebus.Logging.AbstractRebusLoggerFactory">
@@ -5041,6 +5924,11 @@
             The values to use for string interpolation
             </summary>
         </member>
+        <member name="P:Rebus.Logging.ConsoleLoggerFactory.LogStatement.Type">
+            <summary>
+            The type to which this particular logger belongs
+            </summary>
+        </member>
         <member name="M:Rebus.Logging.ConsoleLoggerFactory.#ctor(System.Boolean)">
             <summary>
             Constructs the logger factory
@@ -5070,57 +5958,6 @@
         <member name="M:Rebus.Logging.ConsoleLoggerFactory.GetLogger(System.Type)">
             <summary>
             Gets a logger for logging stuff from within the specified type
-            </summary>
-        </member>
-        <member name="T:Rebus.Logging.GhettoFileLoggerFactory">
-            <summary>
-            Crude file logger implementation
-            </summary>
-        </member>
-        <member name="M:Rebus.Logging.GhettoFileLoggerFactory.#ctor(System.String)">
-            <summary>
-            Creates a crude file-logging thingie, that will flush to the specified file every 500 ms
-            </summary>
-        </member>
-        <member name="M:Rebus.Logging.GhettoFileLoggerFactory.WithFilter(System.Func{Rebus.Logging.GhettoFileLoggerFactory.LogMessage,System.Boolean})">
-            <summary>
-            Adds the specified filter predicate function to the list of filters that will be evaluated for each log message,
-            determining whether or not the given message will end up in the file
-            </summary>
-        </member>
-        <member name="M:Rebus.Logging.GhettoFileLoggerFactory.Finalize">
-            <summary>
-            Ensure, in the most hackish way possible, that the buffer is flushed to disk and that the background flush timer is stopped
-            </summary>
-        </member>
-        <member name="M:Rebus.Logging.GhettoFileLoggerFactory.GetLogger(System.Type)">
-            <summary>
-            Gets a <see cref="T:Rebus.Logging.GhettoFileLoggerFactory.CrudeFileLogger"/> to log yo stuff good
-            </summary>
-        </member>
-        <member name="T:Rebus.Logging.GhettoFileLoggerFactory.LogMessage">
-            <summary>
-            Model of a log message that has been queued to be flushed to disk later
-            </summary>
-        </member>
-        <member name="P:Rebus.Logging.GhettoFileLoggerFactory.LogMessage.LoggerType">
-            <summary>
-            Indicates the type from which the logger that created the log message was created
-            </summary>
-        </member>
-        <member name="P:Rebus.Logging.GhettoFileLoggerFactory.LogMessage.Time">
-            <summary>
-            The time when this log message was emitted
-            </summary>
-        </member>
-        <member name="P:Rebus.Logging.GhettoFileLoggerFactory.LogMessage.Message">
-            <summary>
-            The log message
-            </summary>
-        </member>
-        <member name="P:Rebus.Logging.GhettoFileLoggerFactory.LogMessage.Level">
-            <summary>
-            The log level
             </summary>
         </member>
         <member name="T:Rebus.Logging.ILog">

@@ -46,7 +46,7 @@ D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\N
 D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Rebus.dll
 D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Rebus.Serilog.dll
 D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Serilog.dll
-D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Serilog.FullNetFx.dll
+D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Serilog.Sinks.ColoredConsole.dll
 D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Unipluss.Sign.Events.Client.dll
 D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Unipluss.Sign.Events.Entities.dll
 D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Rebus.AzureServiceBus.dll
@@ -56,10 +56,7 @@ D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\U
 D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Newtonsoft.Json.xml
 D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Rebus.xml
 D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Rebus.Serilog.xml
-D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Serilog.pdb
 D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Serilog.xml
-D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Serilog.FullNetFx.pdb
-D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Serilog.FullNetFx.xml
 D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Rebus.AzureServiceBus.xml
 D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Microsoft.ServiceBus.xml
 D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\obj\Debug\Unipluss.Sign.Events.Test.csprojResolveAssemblyReference.cache

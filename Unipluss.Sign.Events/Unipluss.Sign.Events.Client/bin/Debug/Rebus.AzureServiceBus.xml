@@ -29,6 +29,11 @@
             Constructs the transport, connecting to the service bus pointed to by the connection string.
             </summary>
         </member>
+        <member name="M:Rebus.AzureServiceBus.AzureServiceBusTransport.Initialize">
+            <summary>
+            Initializes the transport by ensuring that the input queue has been created
+            </summary>
+        </member>
         <member name="M:Rebus.AzureServiceBus.AzureServiceBusTransport.PurgeInputQueue">
             <summary>
             Purges the input queue by deleting it and creating it again
@@ -44,9 +49,46 @@
             Enables automatic peek lock renewal - only recommended if you truly need to handle messages for a very long time
             </summary>
         </member>
+        <member name="M:Rebus.AzureServiceBus.AzureServiceBusTransport.CreateQueue(System.String)">
+            <summary>
+            Creates a queue with the given address
+            </summary>
+        </member>
+        <member name="P:Rebus.AzureServiceBus.AzureServiceBusTransport.PartitioningEnabled">
+            <summary>
+            Gets/sets whether partitioning should be enabled on new queues. Only takes effect for queues created
+            after the property has been enabled
+            </summary>
+        </member>
+        <member name="M:Rebus.AzureServiceBus.AzureServiceBusTransport.Send(System.String,Rebus.Messages.TransportMessage,Rebus.Transport.ITransactionContext)">
+            <summary>
+            Sends the given message to the queue with the given <paramref name="destinationAddress"/>
+            </summary>
+        </member>
         <member name="M:Rebus.AzureServiceBus.AzureServiceBusTransport.GetRetrier">
             <summary>
             Should return a new <see cref="T:Rebus.AzureServiceBus.Retrier"/>, fully configured to correctly "accept" the right exceptions
+            </summary>
+        </member>
+        <member name="M:Rebus.AzureServiceBus.AzureServiceBusTransport.Receive(Rebus.Transport.ITransactionContext,System.Threading.CancellationToken)">
+            <summary>
+            Receives the next message from the input queue. Returns null if no message was available
+            </summary>
+        </member>
+        <member name="P:Rebus.AzureServiceBus.AzureServiceBusTransport.Address">
+            <summary>
+            Gets the address of the input queue for the transport
+            </summary>
+        </member>
+        <member name="M:Rebus.AzureServiceBus.AzureServiceBusTransport.Dispose">
+            <summary>
+            Releases prefetched messages and cached queue clients
+            </summary>
+        </member>
+        <member name="M:Rebus.AzureServiceBus.AzureServiceBusTransport.GetSubscriberAddresses(System.String)">
+            <summary>
+            Gets "subscriber addresses" by getting one single magic "queue name", which is then
+            interpreted as a publish operation to a topic when the time comes to send to that "queue"
             </summary>
         </member>
         <member name="M:Rebus.AzureServiceBus.AzureServiceBusTransport.RegisterSubscriber(System.String,System.String)">
@@ -65,9 +107,24 @@
             Always returns true because Azure Service Bus topics and subscriptions are global
             </summary>
         </member>
+        <member name="P:Rebus.AzureServiceBus.AzureServiceBusTransport.DoNotCreateQueuesEnabled">
+            <summary>
+            Gets/sets whether to skip creating queues
+            </summary>
+        </member>
+        <member name="T:Rebus.AzureServiceBus.BasicAzureServiceBusTransport">
+            <summary>
+            Implementation of <see cref="T:Rebus.Transport.ITransport"/> that uses Azure Service Bus queues to send/receive messages.
+            </summary>
+        </member>
         <member name="M:Rebus.AzureServiceBus.BasicAzureServiceBusTransport.#ctor(System.String,System.String,Rebus.Logging.IRebusLoggerFactory,Rebus.Threading.IAsyncTaskFactory)">
             <summary>
             Constructs the transport, connecting to the service bus pointed to by the connection string.
+            </summary>
+        </member>
+        <member name="M:Rebus.AzureServiceBus.BasicAzureServiceBusTransport.Initialize">
+            <summary>
+            Initializes the transport by ensuring that the input queue has been created
             </summary>
         </member>
         <member name="M:Rebus.AzureServiceBus.BasicAzureServiceBusTransport.PurgeInputQueue">
@@ -85,9 +142,45 @@
             Enables automatic peek lock renewal - only recommended if you truly need to handle messages for a very long time
             </summary>
         </member>
+        <member name="M:Rebus.AzureServiceBus.BasicAzureServiceBusTransport.CreateQueue(System.String)">
+            <summary>
+            Creates a queue with the given address
+            </summary>
+        </member>
+        <member name="M:Rebus.AzureServiceBus.BasicAzureServiceBusTransport.Send(System.String,Rebus.Messages.TransportMessage,Rebus.Transport.ITransactionContext)">
+            <summary>
+            Sends the given message to the queue with the given <paramref name="destinationAddress"/>
+            </summary>
+        </member>
         <member name="M:Rebus.AzureServiceBus.BasicAzureServiceBusTransport.GetRetrier">
             <summary>
             Should return a new <see cref="T:Rebus.AzureServiceBus.Retrier"/>, fully configured to correctly "accept" the right exceptions
+            </summary>
+        </member>
+        <member name="M:Rebus.AzureServiceBus.BasicAzureServiceBusTransport.Receive(Rebus.Transport.ITransactionContext,System.Threading.CancellationToken)">
+            <summary>
+            Receives the next message from the input queue. Returns null if no message was available
+            </summary>
+        </member>
+        <member name="P:Rebus.AzureServiceBus.BasicAzureServiceBusTransport.Address">
+            <summary>
+            Gets the address of the input queue for the transport
+            </summary>
+        </member>
+        <member name="P:Rebus.AzureServiceBus.BasicAzureServiceBusTransport.PartitioningEnabled">
+            <summary>
+            Gets/sets whether partitioning should be enabled on new queues. Only takes effect for queues created
+            after the property has been enabled
+            </summary>
+        </member>
+        <member name="P:Rebus.AzureServiceBus.BasicAzureServiceBusTransport.DoNotCreateQueuesEnabled">
+            <summary>
+            Gets/sets whether to skip creating queues
+            </summary>
+        </member>
+        <member name="M:Rebus.AzureServiceBus.BasicAzureServiceBusTransport.Dispose">
+            <summary>
+            Releases prefetched messages and cached queue clients
             </summary>
         </member>
         <member name="T:Rebus.AzureServiceBus.Config.AzureServiceBusMode">
