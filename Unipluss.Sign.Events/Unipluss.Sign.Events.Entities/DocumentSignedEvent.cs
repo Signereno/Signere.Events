@@ -113,6 +113,8 @@ namespace Unipluss.Sign.Events.Entities
         public Dictionary<string,string> FormFields { get; set; }
 
         public string ExternalDocumentId { get; set; }
+
+        public string ExternalSigneeId { get; set; }
     }
 
     public class DocumentFormSignedEvent
