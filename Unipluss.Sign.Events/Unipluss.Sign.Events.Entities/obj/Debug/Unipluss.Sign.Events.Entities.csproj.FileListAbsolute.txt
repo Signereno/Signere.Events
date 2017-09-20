@@ -10,3 +10,8 @@ D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Entities\bin\Deb
 D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Entities\bin\Debug\Unipluss.Sign.Events.Entities.pdb
 D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Entities\obj\Debug\Unipluss.Sign.Events.Entities.dll
 D:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Entities\obj\Debug\Unipluss.Sign.Events.Entities.pdb
+F:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Entities\bin\Debug\Unipluss.Sign.Events.Entities.dll
+F:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Entities\bin\Debug\Unipluss.Sign.Events.Entities.pdb
+F:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Entities\obj\Debug\Unipluss.Sign.Events.Entities.csproj.CoreCompileInputs.cache
+F:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Entities\obj\Debug\Unipluss.Sign.Events.Entities.dll
+F:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Entities\obj\Debug\Unipluss.Sign.Events.Entities.pdb

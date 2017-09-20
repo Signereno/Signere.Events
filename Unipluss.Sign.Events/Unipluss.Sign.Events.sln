@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unipluss.Sign.Events.Client", "Unipluss.Sign.Events.Client\Unipluss.Sign.Events.Client.csproj", "{EC11A8BB-CC8A-4163-AB5E-21503BAD9B2B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unipluss.Sign.Events.Entities", "Unipluss.Sign.Events.Entities\Unipluss.Sign.Events.Entities.csproj", "{FD29ACB2-280F-471F-9570-9ED5F1010513}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unipluss.Sign.Events.Test", "Unipluss.Sign.Events.Test\Unipluss.Sign.Events.Test.csproj", "{43E3D711-BC37-45A8-8AC4-DD8644FAA647}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unipluss.Sign.Events.Client.Rebus.v4", "Unipluss.Sign.Events.Client.Rebus.v4\Unipluss.Sign.Events.Client.Rebus.v4.csproj", "{F682C136-9D7F-4346-9D03-C6FDD2E111D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,8 +29,15 @@ Global
 		{43E3D711-BC37-45A8-8AC4-DD8644FAA647}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43E3D711-BC37-45A8-8AC4-DD8644FAA647}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43E3D711-BC37-45A8-8AC4-DD8644FAA647}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F682C136-9D7F-4346-9D03-C6FDD2E111D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F682C136-9D7F-4346-9D03-C6FDD2E111D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F682C136-9D7F-4346-9D03-C6FDD2E111D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F682C136-9D7F-4346-9D03-C6FDD2E111D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D7386C6F-B9BC-40C5-A711-18E505C4686E}
 	EndGlobalSection
 EndGlobal
