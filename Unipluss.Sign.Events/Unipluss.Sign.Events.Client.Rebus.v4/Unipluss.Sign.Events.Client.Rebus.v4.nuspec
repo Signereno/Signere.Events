@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package >
   <metadata>
-    <id>Signere.Events</id>
+    <id>Signere.Events.Rebus.v4</id>
     <version>$version$</version>
 	<authors>Signere.no AS</authors>
 	<title>Signere.no events</title>
