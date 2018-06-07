@@ -19,7 +19,6 @@ C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\obj\Debug
 C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\obj\Debug\Unipluss.Sign.Events.Client.csprojResolveAssemblyReference.cache
 C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\obj\Debug\Unipluss.Sign.Events.Client.dll
 C:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\obj\Debug\Unipluss.Sign.Events.Client.pdb
-G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\bin\Debug\Unipluss.Sign.Events.Client.dll.config
 G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\bin\Debug\Unipluss.Sign.Events.Client.dll
 G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\bin\Debug\Unipluss.Sign.Events.Client.pdb
 G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\bin\Debug\Microsoft.ServiceBus.dll
@@ -36,7 +35,6 @@ G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\bin\Debug
 G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\bin\Debug\Rebus.AzureServiceBus.xml
 G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\bin\Debug\System.Net.Http.Extensions.xml
 G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\bin\Debug\System.Net.Http.Primitives.xml
-G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\obj\Debug\Unipluss.Sign.Events.Client.csproj.App.config
 G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\obj\Debug\Unipluss.Sign.Events.Client.csprojResolveAssemblyReference.cache
 G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\obj\Debug\Unipluss.Sign.Events.Client.dll
 G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\obj\Debug\Unipluss.Sign.Events.Client.pdb
@@ -81,3 +79,4 @@ F:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\obj\Debug
 F:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\obj\Debug\Unipluss.Sign.Events.Client.csproj.CoreCompileInputs.cache
 F:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\obj\Debug\Unipluss.Sign.Events.Client.dll
 F:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\obj\Debug\Unipluss.Sign.Events.Client.pdb
+G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\obj\Debug\Unipluss.Sign.Events.Client.csproj.CoreCompileInputs.cache

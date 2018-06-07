@@ -85,3 +85,9 @@ F:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\obj\Debug\U
 F:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\obj\Debug\Unipluss.Sign.Events.Test.csproj.CoreCompileInputs.cache
 F:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\obj\Debug\Unipluss.Sign.Events.Test.exe
 F:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\obj\Debug\Unipluss.Sign.Events.Test.pdb
+G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Rebus.Serilog.dll
+G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Serilog.dll
+G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Serilog.Sinks.ColoredConsole.dll
+G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Rebus.Serilog.xml
+G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Serilog.xml
+G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\obj\Debug\Unipluss.Sign.Events.Test.csproj.CoreCompileInputs.cache

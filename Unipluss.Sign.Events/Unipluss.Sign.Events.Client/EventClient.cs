@@ -11,6 +11,7 @@ using Rebus.Config;
 using Rebus.Encryption;
 using Rebus.Logging;
 using Rebus.Retry.Simple;
+using Unipluss.Sign.Events.Client.Infrastructur;
 using Unipluss.Sign.Events.Entities;
 
 namespace Unipluss.Sign.Events.Client
@@ -156,6 +157,7 @@ namespace Unipluss.Sign.Events.Client
                 .Options(c =>
                 {
                     //c.SimpleRetryStrategy(_queuename + "_error", 5, true);
+                    c.AddNamespaceFilter();
                     c.EnableCompression();
                     c.EnableEncryption(encryptionKey);
                 })

@@ -69,6 +69,8 @@
   <ItemGroup>
     <Compile Include="EventClient.cs" />
     <Compile Include="EventClientFluent.cs" />
+    <Compile Include="Infrastructur\NamespaceFilterStep.cs" />
+    <Compile Include="Infrastructur\RebusExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
