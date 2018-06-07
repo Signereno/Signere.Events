@@ -91,3 +91,4 @@ G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\S
 G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Rebus.Serilog.xml
 G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Serilog.xml
 G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\obj\Debug\Unipluss.Sign.Events.Test.csproj.CoreCompileInputs.cache
+G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Test\bin\Debug\Unipluss.Sign.Events.Client.dll.config

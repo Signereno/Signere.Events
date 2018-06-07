@@ -80,3 +80,5 @@ F:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\obj\Debug
 F:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\obj\Debug\Unipluss.Sign.Events.Client.dll
 F:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\obj\Debug\Unipluss.Sign.Events.Client.pdb
 G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\obj\Debug\Unipluss.Sign.Events.Client.csproj.CoreCompileInputs.cache
+G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\bin\Debug\Unipluss.Sign.Events.Client.dll.config
+G:\git\Signere.Events\Unipluss.Sign.Events\Unipluss.Sign.Events.Client\obj\Debug\Unipluss.Sign.Events.Client.csproj.App.config
